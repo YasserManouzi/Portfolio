@@ -79,6 +79,21 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                         <a href="#projets" onClick={(e) => { e.preventDefault(); projetsRef.current.scrollIntoView({ behavior: 'smooth' }); }} className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Voir mes projets</a>
                         <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors transform hover:-translate-y-1">Contact</a>
                     </div>
+                    {/* NOUVEAU : Liens vers GitHub et LinkedIn */}
+                    <div className="flex justify-center gap-6 mt-8">
+                        {/* Lien GitHub */}
+                        <a href="https://github.com/YasserManouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil GitHub" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                            </svg>
+                        </a>
+                        {/* Lien LinkedIn */}
+                        <a href="https://www.linkedin.com/in/yasser-manouzi/" target="_blank" rel="noopener noreferrer" aria-label="Mon profil LinkedIn" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.325-.028-3.044-1.852-3.044-1.853 0-2.136 1.445-2.136 2.939v5.674H9.357V9.41H12.9v1.64c.498-.934 1.377-1.64 3.138-1.64 3.765 0 4.47 2.492 4.47 5.774v6.883zM7.404 6.946c-1.226 0-2.221-.995-2.221-2.221s.995-2.22 2.221-2.22 2.221.995 2.221 2.221-.996 2.221-2.221 2.221zM5.557 9.409h3.766v11.043H5.557V9.409z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </section>
 
@@ -197,13 +212,15 @@ const App = () => {
             setTimeout(() => {
                 const element = sections[id]?.current;
                 if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
+                    const offsetTop = element.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: offsetTop - 84, behavior: 'smooth' }); // Offset pour la navbar
                 }
             }, 50);
         } else {
             const element = sections[id]?.current;
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+                const offsetTop = element.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top: offsetTop - 84, behavior: 'smooth' }); // Offset pour la navbar
             }
         }
     };
