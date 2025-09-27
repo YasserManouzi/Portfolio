@@ -79,7 +79,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                         <a href="#projets" onClick={(e) => { e.preventDefault(); projetsRef.current.scrollIntoView({ behavior: 'smooth' }); }} className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Voir mes projets</a>
                         <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors transform hover:-translate-y-1">Contact</a>
                     </div>
-                    {/* NOUVEAU : Liens vers GitHub et LinkedIn */}
+                    {}
                     <div className="flex justify-center gap-6 mt-8">
                         {/* Lien GitHub */}
                         <a href="https://github.com/YasserManouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil GitHub" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
