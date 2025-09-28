@@ -1,41 +1,72 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // LIGNE CORRIGÉE ICI
 
-// ======================= COMPOSANT NAVBAR =======================
-const Navbar = ({ isScrolled, isMenuOpen, setIsMenuOpen, currentPage, setCurrentPage, scrollToSection, activeSection }) => (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 shadow-lg backdrop-blur-sm" : "bg-transparent"}`}>
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="#" className="flex items-center gap-2 text-2xl font-bold transition-colors duration-300 hover:text-sky-500" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                <svg className="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-            </a>
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle menu">
-                {isMenuOpen ? <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>}
-            </button>
-            <nav className="hidden md:block">
-                <ul className="flex items-center gap-8 list-none m-0 p-0">
-                    <li><a href="#accueil" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a></li>
-                    <li><a href="#projets" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "projets")}>Projets</a></li>
-                    <li><a href="#experience" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "experience")}>Expérience</a></li>
-                    <li><a href="#apropos" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "apropos")}>À propos</a></li>
-                    <li><a href="#" className={`font-medium transition-colors duration-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>Lettre de présentation</a></li>
-                    <li><a href="#contact" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "contact")}>Contact</a></li>
-                    <li><a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a></li>
+// ======================= NAVBAR (AVEC MENU DÉROULANT AMÉLIORÉ) =======================
+const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, activeSection }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleMobileLinkClick = (e, target) => {
+        if (typeof target === 'string') {
+            scrollToSection(e, target);
+        } else if (typeof target === 'function') {
+            e.preventDefault();
+            target();
+        }
+        setIsMenuOpen(false);
+    };
+
+    return (
+        <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
+            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                <a
+                    href="#"
+                    className="flex items-center gap-2 text-2xl font-bold transition-colors duration-300 hover:text-sky-500"
+                    onClick={(e) => { e.preventDefault(); setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                >
+                    <svg className="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </a>
+
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle menu">
+                    {isMenuOpen ? (
+                        <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    ) : (
+                        <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    )}
+                </button>
+
+                <nav className="hidden md:block">
+                    <ul className="flex items-center gap-8 list-none m-0 p-0">
+                        <li><a href="#accueil" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a></li>
+                        <li><a href="#projets" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "projets")}>Projets</a></li>
+                        <li><a href="#experience" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "experience")}>Expérience</a></li>
+                        <li><a href="#apropos" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "apropos")}>À propos</a></li>
+                        <li><a href="#" className={`font-medium transition-colors duration-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>Lettre de présentation</a></li>
+                        <li><a href="#contact" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "contact")}>Contact</a></li>
+                        <li><a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div
+                className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out bg-white/95 shadow-lg border-t border-gray-200 ${
+                    isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                }`}
+            >
+                <ul className="flex flex-col gap-2 list-none p-4">
+                    <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "accueil")}>Accueil</a></li>
+                    <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "projets")}>Projets</a></li>
+                    <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "experience")}>Expérience</a></li>
+                    <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "apropos")}>À propos</a></li>
+                    <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>Lettre de présentation</a></li>
+                    <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "contact")}>Contact</a></li>
                 </ul>
-            </nav>
-        </div>
-        <div className={`md:hidden absolute top-full left-0 w-full bg-white/95 shadow-lg border-t border-gray-200 transition-transform duration-300 ease-in-out ${isMenuOpen ? "transform translate-y-0" : "transform -translate-y-full"}`}>
-            <ul className="flex flex-col gap-2 list-none p-4">
-                <li><a href="#accueil" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'home' && activeSection === 'accueil' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { scrollToSection(e, "accueil"); setIsMenuOpen(false); }}>Accueil</a></li>
-                <li><a href="#projets" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'home' && activeSection === 'projets' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { scrollToSection(e, "projets"); setIsMenuOpen(false); }}>Projets</a></li>
-                <li><a href="#experience" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'home' && activeSection === 'experience' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { scrollToSection(e, "experience"); setIsMenuOpen(false); }}>Expérience</a></li>
-                <li><a href="#apropos" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'home' && activeSection === 'apropos' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { scrollToSection(e, "apropos"); setIsMenuOpen(false); }}>À propos</a></li>
-                <li><a href="#" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'coverLetter' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); setIsMenuOpen(false); }}>Lettre de présentation</a></li>
-                <li><a href="#contact" className={`block py-2 px-4 rounded-md transition-colors ${currentPage === 'home' && activeSection === 'contact' ? 'bg-gray-100 text-sky-500' : 'hover:bg-gray-100'}`} onClick={(e) => { scrollToSection(e, "contact"); setIsMenuOpen(false); }}>Contact</a></li>
-            </ul>
-        </div>
-    </header>
-);
+            </div>
+        </header>
+    );
+};
 
-// ======================= COMPOSANT HOMEPAGE =======================
+// ======================= HOMEPAGE (avec sections) =======================
 const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRef, setCurrentPage }) => {
     const [phrases] = useState(["Étudiant et développeur junior", "Passionné par React et JavaScript", "Créateur d'expériences web"]);
     const [phraseIndex, setPhraseIndex] = useState(0);
@@ -46,52 +77,91 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
     useEffect(() => {
         const handleTyping = () => {
             const currentFullText = phrases[phraseIndex];
-            if (isDeleting) {
-                setCurrentText(currentFullText.substring(0, currentText.length - 1));
-            } else {
-                setCurrentText(currentFullText.substring(0, currentText.length + 1));
-            }
+            if (isDeleting) setCurrentText(currentFullText.substring(0, currentText.length - 1));
+            else setCurrentText(currentFullText.substring(0, currentText.length + 1));
             setTypingSpeed(isDeleting ? 50 : 100);
         };
         const timeoutId = setTimeout(handleTyping, typingSpeed);
-        if (!isDeleting && currentText === phrases[phraseIndex]) {
-            setTimeout(() => setIsDeleting(true), 2000);
-        } else if (isDeleting && currentText === '') {
+        if (!isDeleting && currentText === phrases[phraseIndex]) setTimeout(() => setIsDeleting(true), 2000);
+        else if (isDeleting && currentText === '') {
             setIsDeleting(false);
-            setPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
+            setPhraseIndex((prev) => (prev + 1) % phrases.length);
         }
         return () => clearTimeout(timeoutId);
     }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
-    
+
     const projectsData = [
         { id: 'project1', title: 'Projet 1', description: 'Une courte description pour le premier projet. Technologies utilisées : React, Tailwind.' },
         { id: 'project2', title: 'Projet 2', description: 'Description de ce projet. C\'est une application de type [type]. Technologies : Node.js, Express.' },
         { id: 'project3', title: 'Projet 3', description: 'Un autre projet sympa. J\'ai utilisé des APIs pour celui-ci. Technologies : APIs REST, JavaScript.' },
     ];
 
+    const canvasRef = useRef(null);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animId = null;
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    dx: (Math.random() - 0.5) * 1.5,
+                    dy: (Math.random() - 0.5) * 1.5,
+                });
+            }
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.fill();
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+            animId = requestAnimationFrame(animate);
+        };
+        animate();
+
+        return () => {
+            window.removeEventListener('resize', resizeCanvas);
+            if (animId) cancelAnimationFrame(animId);
+        };
+    }, []);
+
     return (
         <>
             <section id="accueil" ref={accueilRef} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
+                <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                 <div className="relative z-10 animate-fade-in-up">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-4 font-heading">Salut, je suis <span className="text-sky-500">Yasser</span></h1>
-                    <p className="text-lg md:text-2xl font-semibold max-w-2xl h-8 mb-6">{currentText}<span className="typing-cursor text-sky-500">|</span></p>
+                    <p className="text-lg md:text-2xl font-semibold max-w-2xl h-8 mb-6">
+                        {currentText}<span className="typing-cursor text-sky-500">|</span>
+                    </p>
                     <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center">
                         <a href="#projets" onClick={(e) => { e.preventDefault(); projetsRef.current.scrollIntoView({ behavior: 'smooth' }); }} className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Voir mes projets</a>
                         <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors transform hover:-translate-y-1">Contact</a>
                     </div>
-                    {}
                     <div className="flex justify-center gap-6 mt-8">
-                        {/* Lien GitHub */}
                         <a href="https://github.com/YasserManouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil GitHub" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                            </svg>
+                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
                         </a>
-                        {/* Lien LinkedIn */}
-                        <a href="https://www.linkedin.com/in/yasser-manouzi/" target="_blank" rel="noopener noreferrer" aria-label="Mon profil LinkedIn" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.325-.028-3.044-1.852-3.044-1.853 0-2.136 1.445-2.136 2.939v5.674H9.357V9.41H12.9v1.64c.498-.934 1.377-1.64 3.138-1.64 3.765 0 4.47 2.492 4.47 5.774v6.883zM7.404 6.946c-1.226 0-2.221-.995-2.221-2.221s.995-2.22 2.221-2.22 2.221.995 2.221 2.221-.996 2.221-2.221 2.221zM5.557 9.409h3.766v11.043H5.557V9.409z" />
-                            </svg>
+                        <a href="https://linkedin.com/in/yasser-manouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil LinkedIn" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1">
+                             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.766s.784-1.766 1.75-1.766 1.75.79 1.75 1.766-.783 1.766-1.75 1.766zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -165,63 +235,41 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
     );
 };
 
-// ======================= COMPOSANT PROJECTPAGE =======================
+// ======================= ProjectPage =======================
 const ProjectPage = ({ title, description, setCurrentPage }) => (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
         <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>Retour à l'accueil</button>
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">{title}</h1>
         <p className="text-lg text-gray-700 leading-relaxed mb-6">{description}</p>
         <div className="h-64 bg-gray-300 rounded-lg mb-8" />
-        <div className="bg-white p-8 rounded-lg shadow-lg"><h3 className="text-2xl font-bold mb-4 font-heading">Détails du projet</h3><p className="text-gray-600">Vous pouvez ajouter ici plus de détails sur le projet, les technologies utilisées, le processus de développement et les défis rencontrés. Ceci est une page de démonstration. N'hésitez pas à la personnaliser !</p></div>
+        <div className="bg-white p-8 rounded-lg shadow-lg"><h3 className="text-2xl font-bold mb-4 font-heading">Détails du projet</h3><p className="text-gray-600">Détails du projet...</p></div>
     </div>
 );
 
-// ======================= COMPOSANT COVERLETTERPAGE =======================
+// ======================= CoverLetterPage =======================
 const CoverLetterPage = ({ setCurrentPage }) => (
     <div className="w-full max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
         <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>Retour à l'accueil</button>
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">Lettre de présentation</h1>
-        <div className="bg-white p-8 rounded-lg shadow-lg"><p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
-              Cher [Nom du recruteur/de l'entreprise],
-
-              Je vous écris aujourd'hui pour exprimer mon vif intérêt pour le poste de [Nom du poste] que vous proposez... (votre lettre complète ici)
-            </p></div>
+        <div className="bg-white p-8 rounded-lg shadow-lg"><p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">Votre lettre de présentation...</p></div>
     </div>
 );
 
-// ======================= COMPOSANT PRINCIPAL APP =======================
+// ======================= APP =======================
 const App = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('accueil');
     const [currentPage, setCurrentPage] = useState('home');
-
-    const accueilRef = useRef(null);
-    const projetsRef = useRef(null);
-    const experienceRef = useRef(null);
-    const aproposRef = useRef(null);
-    const contactRef = useRef(null);
-
+    const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
     const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'apropos': aproposRef, 'contact': contactRef };
 
     const scrollToSection = (e, id) => {
         e.preventDefault();
-        setIsMenuOpen(false);
         if (currentPage !== 'home') {
             setCurrentPage('home');
-            setTimeout(() => {
-                const element = sections[id]?.current;
-                if (element) {
-                    const offsetTop = element.getBoundingClientRect().top + window.scrollY;
-                    window.scrollTo({ top: offsetTop - 84, behavior: 'smooth' }); // Offset pour la navbar
-                }
-            }, 50);
+            setTimeout(() => { sections[id]?.current?.scrollIntoView({ behavior: 'smooth' }); }, 50);
         } else {
-            const element = sections[id]?.current;
-            if (element) {
-                const offsetTop = element.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({ top: offsetTop - 84, behavior: 'smooth' }); // Offset pour la navbar
-            }
+            sections[id]?.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
 
@@ -246,9 +294,7 @@ const App = () => {
 
     const renderContent = () => {
         switch (currentPage) {
-            case 'project1': return <ProjectPage title="Projet 1 : Nom du projet" description="Ce projet a été créé avec [technologies] pour résoudre [problème]..." setCurrentPage={setCurrentPage} />;
-            case 'project2': return <ProjectPage title="Projet 2 : Nom du projet" description="Ce projet est un [type de projet] développé avec [technologies]..." setCurrentPage={setCurrentPage} />;
-            case 'project3': return <ProjectPage title="Projet 3 : Nom du projet" description="Ce projet est une application [type de projet] conçue pour [objectif]..." setCurrentPage={setCurrentPage} />;
+            case 'project1': return <ProjectPage setCurrentPage={setCurrentPage} title="Projet 1" description="..." />;
             case 'coverLetter': return <CoverLetterPage setCurrentPage={setCurrentPage} />;
             default: return <HomePage accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef} aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage} />;
         }
@@ -256,7 +302,7 @@ const App = () => {
 
     return (
         <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans">
-            <Navbar isScrolled={isScrolled} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} currentPage={currentPage} setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} activeSection={activeSection} />
+            <Navbar isScrolled={isScrolled} currentPage={currentPage} setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} activeSection={activeSection} />
             <main className="flex-grow pt-[84px]">
                 {renderContent()}
             </main>
