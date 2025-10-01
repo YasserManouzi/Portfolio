@@ -68,7 +68,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
 
 // ======================= HOMEPAGE (avec sections) =======================
 const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRef, setCurrentPage }) => {
-    const [phrases] = useState(["Étudiant et développeur junior", "Passionné par React et JavaScript", "Créateur d'expériences web"]);
+    const [phrases] = useState(["Étudiant et développeur junior", "Passionné par la programmation mobile et web", "N’hésitez pas à me contacter !"]);
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [currentText, setCurrentText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
@@ -91,9 +91,10 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
     }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
 
     const projectsData = [
-        { id: 'project1', title: 'Projet 1', description: 'Une courte description pour le premier projet. Technologies utilisées : React, Tailwind.' },
-        { id: 'project2', title: 'Projet 2', description: 'Description de ce projet. C\'est une application de type [type]. Technologies : Node.js, Express.' },
-        { id: 'project3', title: 'Projet 3', description: 'Un autre projet sympa. J\'ai utilisé des APIs pour celui-ci. Technologies : APIs REST, JavaScript.' },
+        { id: 'project1', title: 'Projet 1', description: 'Application mobile pour la gestion des stages étudiants', image: 'images/stageEtu.png' },
+        { id: 'project2', title: 'Projet 2', description: 'Application de gestion de comptes bancaires en Java.', image: 'images/gestionBanque.png' },
+        { id: 'project3', title: 'Projet 3', description: 'Un jeu développé en C# qui implique la manipulation de dés avec deux joueurs.', image: 'images/diceGame.png' },
+        { id: 'project4', title: 'Projet 4', description: 'Un autre projet sympa. J\'ai utilisé des APIs pour celui-ci. Technologies : APIs REST, JavaScript.' },
     ];
 
     const canvasRef = useRef(null);
@@ -173,7 +174,8 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                         {projectsData.map((project) => (
                             <article key={project.id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
-                                <div className="h-40 bg-gray-200 rounded-lg mb-6 flex items-center justify-center text-gray-500 font-bold text-2xl font-heading">Image du projet</div>
+                                <div className="h-40 mb-6 rounded-lg overflow-hidden">
+                                  <img src={project.image} className="w-full h-full object-contain" /></div>
                                 <h3 className="text-xl font-semibold mb-2 font-heading">{project.title}</h3>
                                 <p className="text-gray-600 mb-4">{project.description}</p>
                                 <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">Voir →</span>
