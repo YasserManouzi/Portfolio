@@ -1,7 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-
+import ThemeToggle from './ThemeToggle'; 
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 // ======================= COMPOSANT NAVBAR =======================
-const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, activeSection }) => {
+
+const FadeInSection = ({ children }) => {
+    const { ref, inView } = useInView({
+        triggerOnce: true,    // L'animation ne se joue qu'une seule fois
+        threshold: 0.1,       // Se déclenche quand 10% de la section est visible
+        rootMargin: '0px 0px -50px 0px', // Commence l'animation un peu avant que la section n'atteigne le bas de l'écran
+    });
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }} // État initial : invisible et 30px plus bas
+            animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 30 }} // État final : visible et à sa position normale
+            transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
+const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, activeSection, theme, setTheme }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMobileLinkClick = (e, target) => {
@@ -15,55 +37,120 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
     };
 
     return (
-        <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
+        <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/80 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="#" className="flex items-center gap-2 text-2xl font-bold transition-colors duration-300 hover:text-sky-500" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                <a href="#" className="flex items-center gap-2 text-2xl font-bold transition-colors duration-300 text-gray-900 dark:text-gray-100 hover:text-sky-500" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                     <svg className="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                 </a>
-                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle menu">
-                    {isMenuOpen ? <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>}
-                </button>
-                <nav className="hidden md:block">
-                    <ul className="flex items-center gap-8 list-none m-0 p-0">
-                        <li><a href="#accueil" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a></li>
-                        <li><a href="#projets" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "projets")}>Projets</a></li>
-                        <li><a href="#experience" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "experience")}>Expérience</a></li>
-                        <li><a href="#apropos" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "apropos")}>À propos</a></li>
-                        <li><a href="#" className={`font-medium transition-colors duration-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>Lettre de présentation</a></li>
-                        <li><a href="#contact" className={`font-medium transition-colors duration-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500'}`} onClick={(e) => scrollToSection(e, "contact")}>Contact</a></li>
-                        <li><a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a></li>
-                    </ul>
-                </nav>
+                <div className="flex items-center gap-2">
+                    <nav className="hidden md:flex items-center gap-8">
+                        {/* === MODIFICATIONS DES COULEURS ICI === */}
+                        <a href="#accueil" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a>
+                        <a href="#projets" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "projets")}>Projets</a>
+                        <a href="#experience" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "experience")}>Expérience</a>
+                        <a href="#apropos" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "apropos")}>À propos</a>
+                        <a href="#" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>Lettre de présentation</a>
+                        <a href="#contact" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "contact")}>Contact</a>
+                        <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a>
+                    </nav>
+                    <ThemeToggle theme={theme} setTheme={setTheme} />
+                    <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md text-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle menu">
+                        {isMenuOpen ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>}
+                    </button>
+                </div>
             </div>
-            <div className={`md:hidden absolute top-full left-0 w-full bg-white/95 shadow-lg border-t border-gray-200 transition-transform duration-300 ease-in-out ${isMenuOpen ? "transform translate-y-0" : "transform -translate-y-full"}`}>
+            <div className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out bg-white/95 dark:bg-gray-800/95 shadow-lg border-t border-gray-200 dark:border-gray-700 ${isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
                 <ul className="flex flex-col gap-2 list-none p-4">
-                    <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "accueil")}>Accueil</a></li>
-                    <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "projets")}>Projets</a></li>
-                    <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "experience")}>Expérience</a></li>
-                    <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "apropos")}>À propos</a></li>
-                    <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>Lettre de présentation</a></li>
-                    <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100" onClick={(e) => handleMobileLinkClick(e, "contact")}>Contact</a></li>
+                    <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, "accueil")}>Accueil</a></li>
+                    <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, "projets")}>Projets</a></li>
+                    <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, "experience")}>Expérience</a></li>
+                    <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, "apropos")}>À propos</a></li>
+                    <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>Lettre de présentation</a></li>
+                    <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" onClick={(e) => handleMobileLinkClick(e, "contact")}>Contact</a></li>
                 </ul>
             </div>
         </header>
     );
 };
 
-// ======================= COMPOSANT HOMEPAGE (COMPLET) =======================
+// ======================= COMPOSANT HOMEPAGE =======================
 const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRef, setCurrentPage, projectsData }) => {
     const [phrases] = useState(["Étudiant et développeur junior", "Passionné par React et JavaScript", "Créateur d'expériences web"]);
-    const [phraseIndex, setPhraseIndex] = useState(0);
     const [currentText, setCurrentText] = useState('');
+    const [phraseIndex, setPhraseIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(100);
 
-    useEffect(() => { /* ... code du typing effect ... */ }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
+    useEffect(() => {
+        const handleTyping = () => {
+            const currentFullText = phrases[phraseIndex];
+            if (isDeleting) setCurrentText(currentFullText.substring(0, currentText.length - 1));
+            else setCurrentText(currentFullText.substring(0, currentText.length + 1));
+            setTypingSpeed(isDeleting ? 50 : 100);
+        };
+        const timeoutId = setTimeout(handleTyping, typingSpeed);
+        if (!isDeleting && currentText === phrases[phraseIndex]) setTimeout(() => setIsDeleting(true), 2000);
+        else if (isDeleting && currentText === '') {
+            setIsDeleting(false);
+            setPhraseIndex((prev) => (prev + 1) % phrases.length);
+        }
+        return () => clearTimeout(timeoutId);
+    }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
+    
+    // === CODE DE L'ANIMATION RESTAURÉ ICI ===
     const canvasRef = useRef(null);
-    useEffect(() => { /* ... code du canvas ... */ }, []);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animId = null;
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    dx: (Math.random() - 0.5) * 1.5,
+                    dy: (Math.random() - 0.5) * 1.5,
+                });
+            }
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.fill();
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+            animId = requestAnimationFrame(animate);
+        };
+        animate();
+
+        return () => {
+            window.removeEventListener('resize', resizeCanvas);
+            if (animId) cancelAnimationFrame(animId);
+        };
+    }, []);
+    // ==========================================
 
     return (
         <>
+        <FadeInSection>
             <section id="accueil" ref={accueilRef} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
+                {/* === BALISE CANVAS RESTAURÉE ICI === */}
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                 <div className="relative z-10 animate-fade-in-up">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-4 font-heading">Salut, je suis <span className="text-sky-500">Yasser</span></h1>
@@ -78,119 +165,137 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                     </div>
                 </div>
             </section>
+            </FadeInSection>
 
-            <section id="projets" ref={projetsRef} className="py-24 bg-white">
+          <FadeInSection>
+            <section id="projets" ref={projetsRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
                 <div className="max-w-6xl mx-auto px-6">
-                    <h2 className="text-4xl font-bold text-center mb-12 font-heading">Projets</h2>
+                    <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">Projets</h2>
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                         {projectsData.map((project) => (
-                            <article key={project.id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
-                                <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100">
-                                    <img src={project.image} alt={`Image du projet ${project.cardTitle}`} className="w-full h-full object-contain" />
+                            <article key={project.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
+                                <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                                    <img src={project.image} alt={`Image du projet ${project.cardTitle}`} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2 font-heading">{project.cardTitle}</h3>
-                                <p className="text-gray-600 mb-4">{project.description}</p>
+                                <h3 className="text-xl font-semibold mb-2 font-heading dark:text-white">{project.cardTitle}</h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
                                 <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">Voir →</span>
                             </article>
                         ))}
                     </div>
                 </div>
             </section>
+            </FadeInSection>
             
-            <section id="experience" ref={experienceRef} className="py-24 bg-gray-50">
+            <FadeInSection>
+            <section id="experience" ref={experienceRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors">
                 <div className="max-w-4xl mx-auto px-6">
-                    <h2 className="text-4xl font-bold text-center mb-12 font-heading">Expérience professionnelle</h2>
+                    <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">Expérience professionnelle</h2>
                     <div className="space-y-8">
-                        <div className="bg-white p-8 rounded-xl shadow-lg">
-                            <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold text-gray-900 font-heading">Développeur junior</h3><p className="text-lg text-sky-500">Nom de l'entreprise</p></div><span className="text-gray-500 mt-2 md:mt-0">Jan 2024 - Présent</span></div>
-                            <p className="mt-4 text-gray-600 leading-relaxed">Description des responsabilités et des réalisations. Par exemple : Développement de nouvelles fonctionnalités en utilisant React et Tailwind CSS, participation aux revues de code, collaboration avec l'équipe design.</p>
+                        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                            <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold font-heading dark:text-white">Développeur junior</h3><p className="text-lg text-sky-500">Nom de l'entreprise</p></div><span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">Jan 2024 - Présent</span></div>
+                            <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">Description...</p>
                         </div>
-                        <div className="bg-white p-8 rounded-xl shadow-lg">
-                            <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold text-gray-900 font-heading">Stagiaire en développement web</h3><p className="text-lg text-sky-500">Autre entreprise</p></div><span className="text-gray-500 mt-2 md:mt-0">Été 2023</span></div>
-                            <p className="mt-4 text-gray-600 leading-relaxed">Description du stage, des compétences acquises et des projets réalisés. Par exemple : Création de prototypes, intégration de maquettes, et débogage d'applications existantes.</p>
+                        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                             <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold font-heading dark:text-white">Stagiaire en développement web</h3><p className="text-lg text-sky-500">Autre entreprise</p></div><span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">Été 2023</span></div>
+                            <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">Description...</p>
                         </div>
                     </div>
                 </div>
             </section>
+            </FadeInSection>
 
-            <section id="apropos" ref={aproposRef} className="py-24 bg-white">
-                <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-5 gap-x-16 items-center">
+            <FadeInSection>
+            <section id="apropos" ref={aproposRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
+                 <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-5 gap-x-16 items-center">
                     <div className="lg:col-span-3">
-                        <h2 className="text-4xl font-bold mb-6 font-heading text-center lg:text-left">Plus qu'un simple développeur</h2>
-                        <p className="text-gray-700 leading-relaxed mb-4">Passionné par le développement web, mon aventure a commencé avec une simple ligne de JavaScript qui a animé un élément sur une page. Depuis ce jour, je suis fasciné par la capacité du code à transformer des idées en expériences interactives et utiles. Mon objectif est de créer des interfaces non seulement fonctionnelles, mais aussi intuitives et agréables à utiliser.</p>
+                        <h2 className="text-4xl font-bold mb-6 font-heading text-center lg:text-left dark:text-white">Plus qu'un simple développeur</h2>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Passionné par le développement web...</p>
                         <div className="mt-8">
-                            <h3 className="text-2xl font-semibold mb-4 font-heading text-center lg:text-left">Mes principes</h3>
+                            <h3 className="text-2xl font-semibold mb-4 font-heading text-center lg:text-left dark:text-white">Mes principes</h3>
                             <ul className="space-y-3">
-                                <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong className="font-semibold">Apprentissage continu :</strong> Le monde du web évolue vite, et j'adore ça.</span></li>
-                                <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong className="font-semibold">La collaboration avant tout :</strong> Les meilleures solutions naissent du travail d'équipe.</span></li>
+                                <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">Apprentissage continu :</strong> ...</span></li>
+                                <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">La collaboration avant tout :</strong> ...</span></li>
                             </ul>
                         </div>
                     </div>
                     <div className="lg:col-span-2 mt-12 lg:mt-0">
-                        <div className="bg-white p-8 rounded-xl shadow-lg text-center">
-                            <img src="https://placehold.co/400x400/D1D5DB/4B5563?text=Profil+Picture" alt="Profil" className="rounded-full shadow-lg border-4 border-white w-32 h-32 object-cover mx-auto -mt-20 mb-4" />
-                            <h3 className="text-2xl font-bold font-heading">Yasser Manouzi</h3>
-                            <p className="text-gray-500 mb-6">Développeur Front-end</p>
-                            <h4 className="text-xl font-semibold mb-4 font-heading">Technologies</h4>
-                            <div className="flex flex-wrap justify-center gap-3"><span className="bg-sky-100 text-sky-800 text-sm font-medium px-3 py-1 rounded-full">React</span><span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">JavaScript</span><span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">Tailwind CSS</span></div>
+                        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                             <img src="images/imageProfil.jpg" alt="Profil" className="rounded-full shadow-xl border-4 border-sky-500 dark:border-sky-400 w-32 h-32 object-cover mx-auto -mt-20 mb-4 transform transition-transform hover:scale-105" />
+                            <h3 className="text-2xl font-bold font-heading dark:text-white">Yasser Manouzi</h3>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6">Développeur Front-end</p>
+                            <h4 className="text-xl font-semibold mb-4 font-heading dark:text-white">Technologies</h4>
+                            <div className="flex flex-wrap justify-center gap-3">{/* ... badges ... */}</div>
                         </div>
                     </div>
-                </div>
+                 </div>
             </section>
+            </FadeInSection>
 
-            <section id="contact" ref={contactRef} className="py-24 bg-gray-50">
+            <FadeInSection>            
+            <section id="contact" ref={contactRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors">
                 <div className="max-w-xl mx-auto px-6 text-center">
-                    <h2 className="text-4xl font-bold mb-4 font-heading">Contact</h2>
-                    <p className="text-gray-700 mb-6">Envie de collaborer ? Envoyez-moi un message !</p>
+                    <h2 className="text-4xl font-bold mb-4 font-heading dark:text-white">Contact</h2>
+                    <p className="text-gray-700 dark:text-gray-300 mb-6">Envie de collaborer ? Envoyez-moi un message !</p>
                     <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a>
                 </div>
             </section>
+            </FadeInSection>
         </>
     );
 };
-
 // ======================= COMPOSANT PROJECTPAGE =======================
-const ProjectPage = ({ title, description, details, image, setCurrentPage }) => (
+const ProjectPage = ({ title, description, details, fullImage, setCurrentPage }) => (
+    // On retire min-h-screen ici pour laisser le conteneur principal gérer la hauteur
     <div className="w-full max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
-        <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>Retour à l'accueil</button>
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">{title}</h1>
-        <p className="text-lg text-gray-700 leading-relaxed mb-6">{description}</p>
-        <div className="mb-8 rounded-lg overflow-hidden shadow-lg"><img src={image} alt={`Image principale du projet ${title}`} className="w-full" /></div>
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold mb-4 font-heading">Détails du projet</h3>
-            <p className="text-gray-600">{details}</p>
+        <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Retour à l'accueil
+        </button>
+        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 font-heading">{title}</h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">{description}</p>
+        <div className="mb-8 rounded-lg overflow-hidden shadow-lg bg-gray-100 dark:bg-gray-800 flex justify-center items-center p-4">
+            <img src={fullImage} alt={`Image principale du projet ${title}`} className="max-h-96 object-contain rounded-lg" />
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+            <h3 className="text-2xl font-bold mb-4 font-heading dark:text-gray-100">Détails du projet</h3>
+            <p className="text-gray-600 dark:text-gray-400">{details}</p>
         </div>
     </div>
 );
 
+
 // ======================= COMPOSANT COVERLETTERPAGE =======================
 const CoverLetterPage = ({ setCurrentPage }) => (
-    <div className="w-full max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
-        <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>Retour à l'accueil</button>
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">Lettre de présentation</h1>
-        <div className="bg-white p-8 rounded-lg shadow-lg"><p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">Votre lettre de présentation...</p></div>
+    <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors">
+        <div className="w-full max-w-4xl mx-auto px-6 py-12 pt-24 animate-fade-in-up">
+            <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>Retour à l'accueil</button>
+            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 font-heading">Lettre de présentation</h1>
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-wrap">Votre lettre de présentation...</p>
+            </div>
+        </div>
     </div>
 );
+
 
 // ======================= COMPOSANT PRINCIPAL APP =======================
 const App = () => {
     const projectsData = [
-        { 
-            id: 'project1', 
-            cardTitle: 'Projet 1', 
-            pageTitle: 'StageEtu - Application Mobile',
-            description: 'Application mobile pour la gestion des stages étudiants.', 
-            image: 'images/stageEtu.png',
-            details: 'Ce projet a été développé dans le cadre de ma formation...'
-        },
-        { id: 'project2', cardTitle: 'Projet 2', pageTitle: 'Gestion Banque', description: 'Application de gestion de comptes bancaires en Java.', image: 'images/gestionBanque.png', details: '' },
-        { id: 'project3', cardTitle: 'Projet 3',pageTitle: 'dsad',  description: 'Un jeu développé en C# qui implique la manipulation de dés avec deux joueurs.', image: 'images/diceGame.png', details: '' },
-        { id: 'project4', cardTitle: 'Projet 4', pageTitle: 'dsada', description: 'Un autre projet sympa. J\'ai utilisé des APIs pour celui-ci. Technologies : APIs REST, JavaScript.', details: '' },
+        { id: 'project1', cardTitle: 'Projet 1', pageTitle: 'StageEtu - Application Mobile', description: 'Application mobile pour la gestion des stages étudiants.', image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: 'Ce projet a été développé dans le cadre de ma formation...' },
+        { id: 'project2', cardTitle: 'Projet 2', pageTitle: 'Jeu de Bataille Navale', description: 'Jeu de bataille navale client/serveur en Java.', image: 'images/battleship.png', fullImage: 'images/battleship_full.png', details: 'Jeu de bataille navale développé en Java...' },
+        { id: 'project3', cardTitle: 'Projet 3', pageTitle: 'Application de Gestion Bancaire', description: 'Application de gestion de comptes bancaires en Java.', image: 'images/gestionBanque.png', fullImage: 'images/gestionBanque_full.png', details: 'Détails sur l\'application...' },
+        { id: 'project4', cardTitle: 'Projet 4', pageTitle: 'Jeu de Dés en C#', description: 'Un jeu développé en C# avec deux joueurs.', image: 'images/diceGame.png', fullImage: 'images/diceGame_full.png', details: 'Détails sur le jeu de dés...' },
     ];
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('accueil');
     const [currentPage, setCurrentPage] = useState('home');
+    const [theme, setTheme] = useState(() => {
+        if (localStorage.getItem('theme')) return localStorage.getItem('theme');
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    });
+
     const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
     const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'apropos': aproposRef, 'contact': contactRef };
 
@@ -203,6 +308,15 @@ const App = () => {
             sections[id]?.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -226,15 +340,8 @@ const App = () => {
     const renderContent = () => {
         const project = projectsData.find(p => p.id === currentPage);
         if (project) {
-            return <ProjectPage 
-                setCurrentPage={setCurrentPage} 
-                title={project.pageTitle}
-                description={project.description}
-                image={project.image}
-                details={project.details}
-            />;
+            return <ProjectPage setCurrentPage={setCurrentPage} title={project.pageTitle} description={project.description} fullImage={project.fullImage} details={project.details} />;
         }
-
         switch (currentPage) {
             case 'coverLetter': 
                 return <CoverLetterPage setCurrentPage={setCurrentPage} />;
@@ -249,18 +356,21 @@ const App = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans">
+        <div className="transition-colors duration-300">
             <Navbar
                 isScrolled={isScrolled}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 scrollToSection={scrollToSection}
                 activeSection={activeSection}
+                theme={theme}
+                setTheme={setTheme}
             />
-            <main className="flex-grow pt-[84px]">
+            <main className="flex-grow pt-[84px] bg-white dark:bg-gray-900">
                 {renderContent()}
             </main>
-            <footer className="bg-gray-800 text-white py-6 text-center">
+            <footer className="bg-gray-800 dark:bg-black text-white py-6 text-center border-t border-transparent dark:border-gray-800 transition-colors">
+
                 <p className="text-sm text-gray-400">© 2025 Yasser. Tous droits réservés.</p>
             </footer>
         </div>
