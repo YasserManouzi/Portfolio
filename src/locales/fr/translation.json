@@ -1,0 +1,22 @@
+{
+  "nav_home": "Accueil",
+  "nav_projects": "Projets",
+  "nav_experience": "Expérience",
+  "nav_about": "À propos",
+  "nav_coverLetter": "Lettre de présentation",
+  "nav_contact": "Contact",
+  "nav_contact_me": "Me contacter",
+  "hero_greeting": "Salut, je suis",
+  "hero_button_projects": "Voir mes projets",
+  "hero_button_contact": "Contact",
+  "projects_title": "Projets",
+  "project_1_title": "Projet 1",
+  "project_1_desc": "Application mobile pour la gestion des stages étudiants.",
+  "texte_milieu": "Salut, je suis",
+  "voir_projet": "Voir mes projets",
+  "hero_phrases": {
+    "1": "Étudiant et développeur junior",
+    "2": "Passionné par React et JavaScript",
+    "3": "Créateur d'expériences web"
+ }
+}

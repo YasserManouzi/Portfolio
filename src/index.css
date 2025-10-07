@@ -32,3 +32,38 @@ body {
 .font-heading {
   font-family: 'Merriweather', serif;
 }
+/* src/index.css */
+
+/* ... (tous vos autres styles comme @tailwind et les keyframes) ... */
+
+
+/* === STYLES POUR LA BARRE DE DÉFILEMENT PERSONNALISÉE === */
+
+/* S'applique à la barre de défilement elle-même */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* S'applique à la "piste" de la barre de défilement (le fond) */
+::-webkit-scrollbar-track {
+  background: #f1f5f9; /* Un gris très clair pour le mode clair (slate-100) */
+}
+
+/* S'applique au "pouce" (la partie mobile que l'on traîne) */
+::-webkit-scrollbar-thumb {
+  background-color: #38bdf8; /* Couleur bleu ciel (sky-400) */
+  border-radius: 20px; /* Coins arrondis */
+  border: 3px solid #f1f5f9; /* Crée un effet d'espacement autour du pouce */
+}
+
+/* Styles spécifiques pour le mode sombre */
+.dark ::-webkit-scrollbar-track {
+  background: #020617; /* Fond presque noir pour le mode sombre (slate-950) */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  border-color: #020617; /* La bordure prend la couleur du fond sombre */
+}
+html {
+  scrollbar-width: none;
+}

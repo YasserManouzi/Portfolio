@@ -1,0 +1,23 @@
+{
+  "nav_home": "Home",
+  "nav_projects": "Projects",
+  "nav_experience": "Experience",
+  "nav_about": "About",
+  "nav_coverLetter": "Cover Letter",
+  "nav_contact": "Contact",
+  "nav_contact_me": "Contact Me",
+  "hero_greeting": "Hi, I'm",
+  "hero_button_projects": "View My Projects",
+  "hero_button_contact": "Contact",
+  "projects_title": "Projects",
+  "project_1_title": "Project 1",
+  "project_1_desc": "Mobile application for student internship management.",
+  "texte_milieu": "Hi, i'm",
+  "voir_projet": "View my projects",
+    
+  "hero_phrases": {
+    "1": "Student and Junior Developer",
+    "2": "Passionate about React and JavaScript",
+    "3": "Creator of Web Experiences"
+  }
+}

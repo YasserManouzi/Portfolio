@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ThemeToggle from './ThemeToggle';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import SunCalc from 'suncalc';
+import { useTranslation } from 'react-i18next';
+import CustomScrollbar from './CustomScrollbar';
 
 // COMPOSANT POUR L'ANIMATION D'APPARITION
 const FadeInSection = ({ children }) => {
@@ -23,9 +24,34 @@ const FadeInSection = ({ children }) => {
         </motion.div>
     );
 };
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
+  return (
+    <div className="flex items-center text-sm font-medium">
+      <button 
+        onClick={() => handleLanguageChange('fr')} 
+        className={`px-2 py-1 rounded-l-md transition-colors ${i18n.language === 'fr' ? 'bg-sky-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}
+      >
+        FR
+      </button>
+      <button 
+        onClick={() => handleLanguageChange('en')} 
+        className={`px-2 py-1 rounded-r-md transition-colors ${i18n.language === 'en' ? 'bg-sky-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}
+      >
+        EN
+      </button>
+    </div>
+  );
+};
 
 // ======================= COMPOSANT NAVBAR =======================
 const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, activeSection, theme, setTheme }) => {
+    const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMobileLinkClick = (e, target) => {
@@ -37,6 +63,8 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
         }
         setIsMenuOpen(false);
     };
+
+    
 
     return (
         <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/80 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
@@ -58,13 +86,14 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
                
                 <div className="flex items-center gap-2">
                     <nav className="hidden md:flex items-center gap-8">
-                        <a href="#accueil" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a>
-                        <a href="#projets" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "projets")}>Projets</a>
-                        <a href="#experience" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "experience")}>Expérience</a>
-                        <a href="#apropos" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "apropos")}>À propos</a>
-                        <a href="#" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>Lettre de présentation</a>
-                        <a href="#contact" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "contact")}>Contact</a>
-                        <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Me contacter</a>
+                        <a href="#accueil" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "accueil")}>{t('nav_home')}</a>
+                        <a href="#projets" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "projets")}>{t('nav_projects')}</a>
+                        <a href="#experience" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "experience")}>{t('nav_experience')}</a>
+                        <a href="#apropos" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "apropos")}>{t('nav_about')}</a>
+                        <a href="#" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>{t('nav_coverLetter')}</a>
+                        <a href="#contact" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "contact")}>{t('nav_contact')}</a>
+                        <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-4 py-2 bg-sky-500 text-white rounded-full shadow-md hover:bg-sky-600 transition-colors transform hover:-translate-y-1">{t('nav_contact_me')}</a>
+                        <li><LanguageSwitcher /></li>
                     </nav>
                     <ThemeToggle theme={theme} setTheme={setTheme} />
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md text-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle menu">
@@ -75,12 +104,14 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
             <div className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out bg-white/95 dark:bg-gray-800/95 shadow-lg border-t border-gray-200 dark:border-gray-700 ${isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
                 <ul className="flex flex-col gap-2 list-none p-4">
                     {/* Correction ici : ajout de text-gray-800 dark:text-gray-200 pour les liens du menu mobile */}
-                    <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "accueil")}>Accueil</a></li>
-                    <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "projets")}>Projets</a></li>
-                    <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "experience")}>Expérience</a></li>
-                    <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "apropos")}>À propos</a></li>
-                    <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>Lettre de présentation</a></li>
-                    <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "contact")}>Contact</a></li>
+                    <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "accueil")}>{t('nav_home')}</a></li>
+                    <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "projets")}>{t('nav_projects')}</a></li>
+                    <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "experience")}>{t('nav_experience')}</a></li>
+                    <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "apropos")}>{t('nav_about')}</a></li>
+                    <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>{t('nav_coverLetter')}</a></li>
+                    <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "contact")}>{t('nav_contact')}</a></li>
+                    <li className="flex justify-center mt-4"><LanguageSwitcher /></li>
+                    
                 </ul>
             </div>
         </header>
@@ -89,7 +120,12 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
 
 // ======================= COMPOSANT HOMEPAGE =======================
 const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies }) => {
-    const [phrases] = useState(["Étudiant et développeur junior", "Passionné par React et JavaScript", "Créateur d'expériences web"]);
+    const { t } = useTranslation();
+    const phrases = [
+        t('hero_phrases.1'),
+        t('hero_phrases.2'),
+        t('hero_phrases.3')
+    ];
     const [currentText, setCurrentText] = useState('');
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -176,11 +212,11 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
             <section id="accueil" ref={accueilRef} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                 <div className="relative z-10 animate-fade-in-up">
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-4 font-heading">Salut, je suis <span className="text-sky-500">Yasser Manouzi</span></h1>
+                    <h1 className="text-4xl md:text-6xl font-extrabold mb-4 font-heading">{t('texte_milieu')} <span className="text-sky-500">Yasser Manouzi</span></h1>
                     <p className="text-lg md:text-2xl font-semibold max-w-2xl h-8 mb-6">{currentText}<span className="typing-cursor text-sky-500">|</span></p>
                     <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center">
-                        <a href="#projets" onClick={(e) => { e.preventDefault(); projetsRef.current.scrollIntoView({ behavior: 'smooth' }); }} className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">Voir mes projets</a>
-                        <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors transform hover:-translate-y-1">Contact</a>
+                        <a href="#projets" onClick={(e) => { e.preventDefault(); projetsRef.current.scrollIntoView({ behavior: 'smooth' }); }} className="inline-block px-8 py-4 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1">{t('voir_projet')}</a>
+                        <a href="mailto:yasser.manouzi.pro@gmail.com" className="inline-block px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors transform hover:-translate-y-1">{t('nav_contact')}</a>
                     </div>
                     <div className="flex justify-center gap-6 mt-8">
                         <a href="https://github.com/YasserManouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil GitHub" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg></a>
@@ -337,6 +373,13 @@ const App = () => {
         { name: "Git", icon: "devicon-git-plain" },
     ];
 
+    const { scrollYProgress } = useScroll();
+    // On ajoute un effet "ressort" (spring) pour un mouvement plus fluide
+    const scaleY = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('accueil');
     const [currentPage, setCurrentPage] = useState('home');
@@ -432,6 +475,8 @@ const App = () => {
     };
 
     return (
+        <>
+        <CustomScrollbar scrollYProgress={scaleY} />
         <div className="transition-colors duration-300">
             <Navbar
                 isScrolled={isScrolled}
@@ -449,6 +494,7 @@ const App = () => {
                 <p className="text-sm text-gray-400">© 2025 Yasser. Tous droits réservés.</p>
             </footer>
         </div>
+         </>
     );
 };
 
