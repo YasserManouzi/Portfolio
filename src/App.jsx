@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ThemeToggle from './ThemeToggle';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import SunCalc from 'suncalc';
 
 // COMPOSANT POUR L'ANIMATION D'APPARITION
 const FadeInSection = ({ children }) => {
@@ -40,9 +41,21 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
     return (
         <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/80 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                
+           
                 <a href="#" className="flex items-center gap-2 text-2xl font-bold transition-colors duration-300 text-gray-900 dark:text-gray-100 hover:text-sky-500" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <motion.div
+                        whileHover={{ scale: 1.15, rotate: 10, color: '#38bdf8' }} // Animation au survol: agrandit, tourne, change de couleur (sky-500)
+                        whileTap={{ scale: 0.9 }} // Animation au clic
+                        initial={{ opacity: 0, y: -20 }} // État initial lors du chargement
+                        animate={{ opacity: 1, y: 0 }} // Animation à l'apparition
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }} // Type de transition "ressort"
+                        className="flex items-center" // Ajout d'une classe pour centrer si besoin
+                    >
                     <svg className="w-8 h-8 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                    </motion.div>
                 </a>
+               
                 <div className="flex items-center gap-2">
                     <nav className="hidden md:flex items-center gap-8">
                         <a href="#accueil" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "accueil")}>Accueil</a>
@@ -328,9 +341,35 @@ const App = () => {
     const [activeSection, setActiveSection] = useState('accueil');
     const [currentPage, setCurrentPage] = useState('home');
     const [theme, setTheme] = useState(() => {
-        if (localStorage.getItem('theme')) return localStorage.getItem('theme');
+        // 1. On regarde si l'utilisateur a un choix sauvegardé
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            return savedTheme;
+        }
+        // 2. Sinon, on se base sur la préférence de son système d'exploitation
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     });
+
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        // On sauvegarde le choix actuel pour les prochaines visites
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    // Ce useEffect met à jour la page quand le thème change (manuellement ou automatiquement)
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        // Si l'utilisateur change le thème manuellement, on sauvegarde son choix
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
     const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'apropos': aproposRef, 'contact': contactRef };
