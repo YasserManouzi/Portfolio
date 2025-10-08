@@ -113,9 +113,49 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
         }
         return () => clearTimeout(timeoutId);
     }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
+
     
+    const { ref: inViewRef, inView } = useInView({ threshold: 0 });
     const canvasRef = useRef(null);
-    useEffect(() => { /* ... code du canvas inchangé ... */ }, []);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [], animId = null;
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 80; i++) particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 2 + 1, dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5 });
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        const animate = () => {
+            if (!inView) {
+                animId = requestAnimationFrame(animate);
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.fill();
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+            animId = requestAnimationFrame(animate);
+        };
+        animate();
+        resizeCanvas(); // Appeler resizeCanvas après avoir défini les particules
+        window.addEventListener('resize', resizeCanvas);
+        return () => {
+            window.removeEventListener('resize', resizeCanvas);
+            if (animId) cancelAnimationFrame(animId);
+        };
+    }, [inView]);
 
     const { ref: technologiesRef, inView: technologiesInView } = useInView({ triggerOnce: true, threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -123,7 +163,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
 
     return (
         <>
-            <section id="accueil" ref={accueilRef} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
+            <section id="accueil" ref={(el) => { accueilRef.current = el; inViewRef(el); }} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                 <div className="absolute inset-0 flex items-center justify-center z-0">
                     <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
