@@ -304,32 +304,39 @@ const App = () => {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     });
 
+    const isScrollingProgrammatically = useRef(false);
+
     const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
     const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'apropos': aproposRef, 'contact': contactRef };
 
     const scrollToSection = (e, id) => {
-    e.preventDefault();
+        e.preventDefault();
+        setActiveSection(id);
+        
+        // On indique qu'un scroll programmé est en cours
+        isScrollingProgrammatically.current = true;
 
-    // Si on n'est pas sur la page d'accueil, on change d'abord de page
-    if (currentPage !== 'home') {
-        setCurrentPage('home');
+        const performScroll = (sectionId) => {
+            const element = sections[sectionId]?.current;
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // On attend un tout petit peu que React affiche la HomePage
-        setTimeout(() => {
-            // Méthode "brutale" mais infaillible : on utilise les sélecteurs du DOM
-            const sectionElement = document.getElementById(id);
-            if (sectionElement) {
-                sectionElement.scrollIntoView({ behavior: 'smooth' });
+                // On attend la fin du scroll pour réactiver la détection automatique
+                setTimeout(() => {
+                    isScrollingProgrammatically.current = false;
+                }, 1000); // 1 seconde est une durée sûre pour la plupart des scrolls
             }
-        }, 100); // 100ms est un délai sûr
-    } else {
-        // Si on est déjà sur la page d'accueil, la méthode avec les refs fonctionne bien
-        const element = sections[id]?.current;
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        if (currentPage !== 'home') {
+            setCurrentPage('home');
+            setTimeout(() => {
+                performScroll(id);
+            }, 100);
+        } else {
+            performScroll(id);
         }
-    }
-};
+    };
 
     useEffect(() => {
         if (theme === 'dark') document.documentElement.classList.add('dark');
@@ -338,37 +345,32 @@ const App = () => {
     }, [theme]);
 
    useEffect(() => {
-    const handleScroll = () => {
-        setIsScrolled(window.scrollY > 50);
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
 
-        if (currentPage === 'home') {
-            let currentSectionId = '';
-            
-            // On vérifie si l'utilisateur est tout en bas de la page
-            // (window.innerHeight + window.scrollY) >= document.body.offsetHeight
-            // C'est une condition pour détecter si on a atteint le bas
-            const isAtBottom = (window.innerHeight + Math.ceil(window.scrollY)) >= document.documentElement.scrollHeight;
+            // Si un scroll programmé est en cours, on ignore la détection
+            if (isScrollingProgrammatically.current) return;
 
-            if (isAtBottom) {
-                currentSectionId = 'contact'; // Si on est en bas, on force la section "Contact"
-            } else {
-                const scrollPosition = window.scrollY + 150;
-                // On garde la logique précédente pour les autres cas
-                for (const sectionId in sections) {
-                    const section = sections[sectionId].current;
-                    if (section && section.offsetTop <= scrollPosition) {
-                        currentSectionId = sectionId;
+            if (currentPage === 'home') {
+                let currentSectionId = 'accueil';
+                const isAtBottom = (window.innerHeight + Math.ceil(window.scrollY)) >= document.documentElement.scrollHeight;
+                if (isAtBottom) {
+                    currentSectionId = 'contact';
+                } else {
+                    const scrollPosition = window.scrollY + 150;
+                    for (const sectionId in sections) {
+                        const section = sections[sectionId].current;
+                        if (section && section.offsetTop <= scrollPosition) {
+                            currentSectionId = sectionId;
+                        }
                     }
                 }
+                setActiveSection(currentSectionId);
             }
-            setActiveSection(currentSectionId || 'accueil');
-        }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-}, [currentPage, sections]);
-
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [currentPage, sections]);
     const renderContent = () => {
         const project = projectsData.find(p => p.id === currentPage);
         if (project) {
