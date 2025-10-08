@@ -143,7 +143,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
             </section>
 
             <FadeInSection>
-                <section id="projets" ref={projetsRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
+                <section id="projets" ref={projetsRef} className="py-24 bg-white dark:bg-gray-900 transition-colors animated-section-background">
                     <div className="absolute inset-0 flex items-center justify-center z-0">
                     <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
                 </div>
@@ -152,9 +152,13 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                             {projectsData.map((project) => (
                                 <article key={project.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
-                                    <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                                        <img src={project.image} alt={`${t('project_image_alt')} ${project.cardTitle}`} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                                    </div>
+                                <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                                    <img 
+                                        src={project.image} 
+                                        alt={`${t('project_image_alt')} ${project.cardTitle}`}
+                                        className={`w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 border-4 ${project.borderColor}`} 
+                                    />
+                                </div>
                                     <h3 className="text-xl font-semibold mb-2 font-heading dark:text-white">{project.cardTitle}</h3>
                                     <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
                                     <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">{t('project_view')}</span>
@@ -166,7 +170,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
             </FadeInSection>
             
             <FadeInSection>
-                <section id="experience" ref={experienceRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors">
+                <section id="experience" ref={experienceRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                     <div className="max-w-4xl mx-auto px-6">
                         <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('experience_title')}</h2>
                         <div className="space-y-8">
@@ -184,7 +188,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
             </FadeInSection>
 
             <FadeInSection>
-                <section id="apropos" ref={aproposRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
+                <section id="apropos" ref={aproposRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                      <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-5 gap-x-16 items-center">
                         <div className="lg:col-span-3">
                             <h2 className="text-4xl font-bold mb-6 font-heading text-center lg:text-left dark:text-white">{t('about_title')}</h2>
@@ -218,7 +222,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
             </FadeInSection>
 
             <FadeInSection>
-                <section id="contact" ref={contactRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors">
+                <section id="contact" ref={contactRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                     <div className="max-w-xl mx-auto px-6 text-center">
                         <h2 className="text-4xl font-bold mb-4 font-heading dark:text-white">{t('contact_title')}</h2>
                         <p className="text-gray-700 dark:text-gray-300 mb-6">{t('contact_subtitle')}</p>
@@ -236,9 +240,17 @@ const ProjectPage = ({ title, description, details, fullImage, setCurrentPage })
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
             <div className="w-full max-w-4xl mx-auto px-6 py-12 pt-24 animate-fade-in-up">
-                <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8">
+                <button onClick={() => {
+                    setCurrentPage('home');
+                        // On attend que la HomePage soit rendue avant de scroller
+                        setTimeout(() => {
+                            document.getElementById('projets')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 50);
+                    }} 
+                    className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"
+                >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    {t('project_page_back')}
+                    {t('project_page_back_to_projects')}
                 </button>
                 <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 font-heading">{title}</h1>
                 <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">{description}</p>
@@ -278,10 +290,10 @@ const App = () => {
     const { t, i18n } = useTranslation();
 
     const projectsData = [
-        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details') },
-        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details') },
-        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/gestionBanque.png', details: t('project3_details') },
-        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/diceGame.png', details: t('project4_details') },
+        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details'), borderColor: 'border-red-500'},
+        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details'), borderColor: 'border-blue-500' },
+        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/gestionBanque.png', details: t('project3_details'), borderColor: 'border-red-500' },
+        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/diceGame.png', details: t('project4_details'), borderColor: 'border-purple-500' },
     ];
     
     const technologies = [

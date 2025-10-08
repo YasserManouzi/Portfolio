@@ -67,3 +67,49 @@ body {
 html {
   scrollbar-width: none;
 }
+/* === STYLES POUR LES ARRIÈRE-PLANS ANIMÉS DES SECTIONS === */
+
+/* On prépare les sections à recevoir un fond animé */
+.animated-section-background {
+  position: relative; /* Nécessaire pour positionner le pseudo-élément */
+  overflow: hidden;   /* Empêche le dégradé de déborder */
+  z-index: 1;         /* S'assure que le contenu est au-dessus de l'animation */
+}
+
+/* On crée le pseudo-élément qui contiendra notre dégradé animé */
+.animated-section-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* NOUVEAU DÉGRADÉ AVEC DES COULEURS PLUS FONCÉES ET SUBTILES */
+  background: linear-gradient(
+    60deg,
+    #1A2A47, /* Un bleu-gris très foncé */
+    #251A47, /* Un violet-gris très foncé */
+    #471A3A, /* Un rouge-marron très foncé */
+    #472A1A, /* Un orange-marron très foncé */
+    #47471A, /* Un jaune-vert très foncé */
+    #1A4725, /* Un vert-bleu très foncé */
+    #1A4747, /* Un bleu-vert très foncé */
+    #1A2A47  /* Retour au premier pour une boucle douce */
+  );
+  background-size: 300% 300%;
+  animation: gradientAnimation 12s ease infinite;
+  z-index: -1;
+  opacity: 0.2; /* L'opacité peut être légèrement augmentée car les couleurs sont plus sombres */
+}
+
+/* En mode sombre, on peut laisser l'opacité à 0.2 ou la réduire à 0.15 si c'est trop */
+.dark .animated-section-background::before {
+  opacity: 0.2; /* Ou 0.15 si vous trouvez ça trop intense en mode sombre */
+}
+
+/* L'animation qui fait bouger le dégradé */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
