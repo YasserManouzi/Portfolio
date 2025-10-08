@@ -6,18 +6,69 @@
   "nav_coverLetter": "Cover Letter",
   "nav_contact": "Contact",
   "nav_contact_me": "Contact Me",
+
   "hero_greeting": "Hi, I'm",
   "hero_button_projects": "View My Projects",
   "hero_button_contact": "Contact",
-  "projects_title": "Projects",
-  "project_1_title": "Project 1",
-  "project_1_desc": "Mobile application for student internship management.",
-  "texte_milieu": "Hi, i'm",
-  "voir_projet": "View my projects",
-    
   "hero_phrases": {
     "1": "Student and Junior Developer",
     "2": "Passionate about React and JavaScript",
     "3": "Creator of Web Experiences"
-  }
+  },
+
+  "projects_title": "Projects",
+  "project_view": "View →",
+  "project_image_alt": "Image for project",
+
+  "experience_title": "Work Experience",
+  "experience_job1_title": "Junior Developer",
+  "experience_job1_company": "Company Name",
+  "experience_job1_date": "Jan 2024 - Present",
+  "experience_job1_desc": "Developing new features using React and Tailwind CSS, participating in code reviews, and collaborating with the design team.",
+  "experience_job2_title": "Web Developer Intern",
+  "experience_job2_company": "Another Company",
+  "experience_job2_date": "Summer 2023",
+  "experience_job2_desc": "Creating prototypes, integrating mockups, and debugging existing applications.",
+
+  "about_title": "More than just a developer",
+  "about_p1": "Passionate about web development, my journey began with a single line of JavaScript that animated an element on a page. My goal is to create intuitive and high-performing user interfaces.",
+  "about_principles_title": "My Principles",
+  "about_principle1_title": "Continuous Learning: ",
+  "about_principle1_text": "The web world evolves fast, and I love it.",
+  "about_principle2_title": "Collaboration First: ",
+  "about_principle2_text": "The best solutions come from teamwork.",
+  "about_profile_alt": "Profile picture of Yasser Manouzi",
+  "about_name": "Yasser Manouzi",
+  "about_job_title": "Front-end Developer",
+  "about_tech_title": "Technologies",
+
+  "contact_title": "Contact",
+  "contact_subtitle": "Want to collaborate? Send me a message!",
+
+  "project_page_back": "Back to Home",
+  "project_page_details_title": "Project Details",
+
+  "cover_letter_content": "Dear [Recruiter/Company Name]...",
+
+  "footer_text": "© 2025 Yasser. All rights reserved.",
+
+  "project1_card_title": "Project 1",
+  "project1_page_title": "StageEtu - Mobile Application",
+  "project1_description": "Mobile application for student internship management.",
+  "project1_details": "This project was developed as part of my training...",
+
+  "project2_card_title": "Project 2",
+  "project2_page_title": "Battleship Game",
+  "project2_description": "Client/server battleship game in Java.",
+  "project2_details": "A battleship game developed in Java with a client/server environment using the MVC design pattern.",
+
+  "project3_card_title": "Project 3",
+  "project3_page_title": "Bank Management Application",
+  "project3_description": "Bank account management application in Java.",
+  "project3_details": "Details about the bank management application...",
+
+  "project4_card_title": "Project 4",
+  "project4_page_title": "Dice Game in C#",
+  "project4_description": "A game developed in C# involving two players and dice.",
+  "project4_details": "Details about the dice game..."
 }

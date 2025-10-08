@@ -6,17 +6,69 @@
   "nav_coverLetter": "Lettre de présentation",
   "nav_contact": "Contact",
   "nav_contact_me": "Me contacter",
+  
   "hero_greeting": "Salut, je suis",
   "hero_button_projects": "Voir mes projets",
   "hero_button_contact": "Contact",
-  "projects_title": "Projets",
-  "project_1_title": "Projet 1",
-  "project_1_desc": "Application mobile pour la gestion des stages étudiants.",
-  "texte_milieu": "Salut, je suis",
-  "voir_projet": "Voir mes projets",
   "hero_phrases": {
     "1": "Étudiant et développeur junior",
     "2": "Passionné par React et JavaScript",
     "3": "Créateur d'expériences web"
- }
+  },
+
+  "projects_title": "Projets",
+  "project_view": "Voir →",
+  "project_image_alt": "Image du projet",
+
+  "experience_title": "Expérience professionnelle",
+  "experience_job1_title": "Développeur junior",
+  "experience_job1_company": "Nom de l'entreprise",
+  "experience_job1_date": "Jan 2024 - Présent",
+  "experience_job1_desc": "Développement de nouvelles fonctionnalités en utilisant React et Tailwind CSS, participation aux revues de code, collaboration avec l'équipe design.",
+  "experience_job2_title": "Stagiaire en développement web",
+  "experience_job2_company": "Autre entreprise",
+  "experience_job2_date": "Été 2023",
+  "experience_job2_desc": "Création de prototypes, intégration de maquettes, et débogage d'applications existantes.",
+  
+  "about_title": "Plus qu'un simple développeur",
+  "about_p1": "Passionné par le développement web, mon aventure a commencé avec une simple ligne de JavaScript qui a animé un élément sur une page. Mon objectif est de créer des interfaces utilisateur intuitives et performantes.",
+  "about_principles_title": "Mes principes",
+  "about_principle1_title": "Apprentissage continu : ",
+  "about_principle1_text": "Le monde du web évolue vite, et j'adore ça.",
+  "about_principle2_title": "La collaboration avant tout : ",
+  "about_principle2_text": "Les meilleures solutions naissent du travail d'équipe.",
+  "about_profile_alt": "Photo de profil de Yasser Manouzi",
+  "about_name": "Yasser Manouzi",
+  "about_job_title": "Développeur Front-end",
+  "about_tech_title": "Technologies",
+
+  "contact_title": "Contact",
+  "contact_subtitle": "Envie de collaborer ? Envoyez-moi un message !",
+
+  "project_page_back": "Retour à l'accueil",
+  "project_page_details_title": "Détails du projet",
+
+  "cover_letter_content": "Cher [Nom du recruteur/de l'entreprise]...",
+
+  "footer_text": "© 2025 Yasser. Tous droits réservés.",
+
+  "project1_card_title": "Projet 1",
+  "project1_page_title": "StageEtu - Application Mobile",
+  "project1_description": "Application mobile pour la gestion des stages étudiants.",
+  "project1_details": "Ce projet a été développé dans le cadre de ma formation...",
+
+  "project2_card_title": "Projet 2",
+  "project2_page_title": "Jeu de Bataille Navale",
+  "project2_description": "Jeu de bataille navale client/serveur en Java.",
+  "project2_details": "Jeu de bataille navale développé en Java avec un environnement client/serveur utilisant le patron de conception MVC.",
+  
+  "project3_card_title": "Projet 3",
+  "project3_page_title": "Application de Gestion Bancaire",
+  "project3_description": "Application de gestion de comptes bancaires en Java.",
+  "project3_details": "Détails sur l'application de gestion bancaire...",
+
+  "project4_card_title": "Projet 4",
+  "project4_page_title": "Jeu de Dés en C#",
+  "project4_description": "Un jeu développé en C# avec deux joueurs.",
+  "project4_details": "Détails sur le jeu de dés..."
 }
