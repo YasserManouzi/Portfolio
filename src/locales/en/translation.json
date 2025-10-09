@@ -56,12 +56,12 @@
   "project1_card_title": "Project 1",
   "project1_page_title": "StageEtu - Mobile Application",
   "project1_description": "Mobile application for student internship management.",
-  "project1_details": "This project was developed as part of my training...",
+  "project1_details": "The application, coded in Kotlin, is designed to manage a student's internships. Its main features include login, registration, and profile editing interfaces. The user can access relevant details about their internship profile directly from the home menu. The application has a login page, a registration page, a profile editing page, and a home page for a logged-in account. Once logged in, the user can search for internships on a dedicated search page and view their personal dashboard with all important information. The application is still a work in progress and under active development.",
 
   "project2_card_title": "Project 2",
   "project2_page_title": "Battleship Game",
   "project2_description": "Client/server battleship game in Java.",
-  "project2_details": "A battleship game developed in Java with a client/server environment using the MVC design pattern.",
+  "project2_details": "The application allows generating players who have played a game. It also allows checking the stats of each selected player. There is also a menu to join the players' page. Features: Add players, delete players, and view player stats. Note: Player stats are the same for each player. Each time a player is added, it adopts the new player's stats, and they are the same for all players.",
 
   "project3_card_title": "Project 3",
   "project3_page_title": "Bank Management Application",
@@ -71,5 +71,5 @@
   "project4_card_title": "Project 4",
   "project4_page_title": "Dice Game in C#",
   "project4_description": "A game developed in C# involving two players and dice.",
-  "project4_details": "Details about the dice game..."
+  "project4_details": "A game developed in C# that involves dice manipulation with two players. The rules are simple. Each player needs to roll the die. The one with the higher number gets a point. A player wins the game when they reach 5 points."
 }

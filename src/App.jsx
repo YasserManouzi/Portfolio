@@ -192,6 +192,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                             {projectsData.map((project) => (
                                 <article key={project.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
+                                <div className="flex-grow">
                                 <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
                                     <img 
                                         src={project.image} 
@@ -201,7 +202,23 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                                 </div>
                                     <h3 className="text-xl font-semibold mb-2 font-heading dark:text-white">{project.cardTitle}</h3>
                                     <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
+                                    <div className="mt-auto pt-4 flex justify-between items-center"></div>
                                     <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">{t('project_view')}</span>
+                                    {project.repoUrl && (
+                                    <a 
+                                            href={project.repoUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            aria-label={`Voir le code source de ${project.cardTitle} sur GitHub`}
+                                            className="text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+                                            // Empêche le clic de se propager à la carte entière
+                                            onClick={(e) => e.stopPropagation()} 
+                                        >
+                                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
+                                        </a>
+                                    )}
+                                    {/* ======================================= */}
+                                </div>
                                 </article>
                             ))}
                         </div>
@@ -330,10 +347,10 @@ const App = () => {
     const { t, i18n } = useTranslation();
 
     const projectsData = [
-        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details'), borderColor: 'border-red-500'},
-        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details'), borderColor: 'border-blue-500' },
-        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/gestionBanque.png', details: t('project3_details'), borderColor: 'border-red-500' },
-        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/diceGame.png', details: t('project4_details'), borderColor: 'border-purple-500' },
+        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/StageEtu'},
+        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details'), borderColor: 'border-blue-500', repoUrl: 'https://github.com/YasserManouzi/Battleship'},
+        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/imageGestionBanque.png', details: t('project3_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/https://github.com/YasserManouzi/GestionBanque' },
+        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/imageDiceGame.png', details: t('project4_details'), borderColor: 'border-purple-500', repoUrl: 'https://github.com/YasserManouzi/Dice-game' },
     ];
     
     const technologies = [

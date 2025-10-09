@@ -56,20 +56,20 @@
   "project1_card_title": "Projet 1",
   "project1_page_title": "StageEtu - Application Mobile",
   "project1_description": "Application mobile pour la gestion des stages étudiants.",
-  "project1_details": "Ce projet a été développé dans le cadre de ma formation...",
+  "project1_details": "L'application, codée en Kotlin, est conçue pour gérer les stages d'un étudiant. Ses fonctionnalités principales incluent des interfaces de connexion, d'inscription et de modification de profil. L'utilisateur peut accéder aux détails pertinents de son profil de stage directement depuis le menu d'accueil. L'application dispose d'une page de connexion, d'inscription, de modification de profil, et d'une page d'accueil pour un compte connecté. Une fois connecté, l'utilisateur peut rechercher des stages sur une page dédiée et consulter son accueil personnel avec toutes les informations importantes. L'application est toujours en cours de développement actif.",
 
   "project2_card_title": "Projet 2",
   "project2_page_title": "Jeu de Bataille Navale",
   "project2_description": "Jeu de bataille navale client/serveur en Java.",
-  "project2_details": "Jeu de bataille navale développé en Java avec un environnement client/serveur utilisant le patron de conception MVC.",
+  "project2_details": "L'application permet de générer des joueurs qui ont participé à une partie. Elle permet aussi de vérifier les statistiques de chaque joueur sélectionné, avec un menu pour accéder à la page des joueurs. Fonctionnalités : Ajout de joueurs, suppression de joueurs, et consultation des statistiques. Note : Les statistiques sont identiques pour chaque joueur et se mettent à jour à chaque ajout.",
   
   "project3_card_title": "Projet 3",
   "project3_page_title": "Application de Gestion Bancaire",
   "project3_description": "Application de gestion de comptes bancaires en Java.",
-  "project3_details": "Détails sur l'application de gestion bancaire...",
+  "project3_details": "Une interface développée avec Swing qui permet la gestion de comptes bancaires avec des fonctionnalités telles que la connexion utilisateur, l'ajout de nouveaux comptes bancaires, et la réalisation de diverses opérations par l'utilisateur. Disponible en version console et interface graphique. ",
 
   "project4_card_title": "Projet 4",
   "project4_page_title": "Jeu de Dés en C#",
   "project4_description": "Un jeu développé en C# avec deux joueurs.",
-  "project4_details": "Détails sur le jeu de dés..."
+  "project4_details": "Un jeu développé en C# qui implique la manipulation de dés avec deux joueurs. Les règles sont simples. Chaque joueur doit lancer le dé. Celui avec le nombre le plus élevé obtient un point. Un joueur gagne la partie lorsqu'il atteint 5 points."
 }
