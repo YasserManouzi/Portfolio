@@ -61,6 +61,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
                         <a href="#accueil" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'accueil' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "accueil")}>{t('nav_home')}</a>
                         <a href="#projets" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'projets' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "projets")}>{t('nav_projects')}</a>
                         <a href="#experience" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'experience' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "experience")}>{t('nav_experience')}</a>
+                        <a href="#formation" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'formation' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "formation")}>{t('nav_education')}</a>
                         <a href="#apropos" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'apropos' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "apropos")}>{t('nav_about')}</a>
                         <a href="#" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'coverLetter' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => { e.preventDefault(); setCurrentPage('coverLetter'); }}>{t('nav_coverLetter')}</a>
                         <a href="#contact" className={`font-medium transition-colors duration-300 dark:text-gray-300 ${currentPage === 'home' && activeSection === 'contact' ? 'text-sky-500 link-active' : 'hover:text-sky-500 dark:hover:text-sky-400'}`} onClick={(e) => scrollToSection(e, "contact")}>{t('nav_contact')}</a>
@@ -78,6 +79,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
                     <li><a href="#accueil" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "accueil")}>{t('nav_home')}</a></li>
                     <li><a href="#projets" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "projets")}>{t('nav_projects')}</a></li>
                     <li><a href="#experience" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "experience")}>{t('nav_experience')}</a></li>
+                    <li><a href="#formation" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "formation")}>{t('nav_education')}</a></li>
                     <li><a href="#apropos" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "apropos")}>{t('nav_about')}</a></li>
                     <li><a href="#" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, () => setCurrentPage("coverLetter"))}>{t('nav_coverLetter')}</a></li>
                     <li><a href="#contact" className="block py-2 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200" onClick={(e) => handleMobileLinkClick(e, "contact")}>{t('nav_contact')}</a></li>
@@ -89,7 +91,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
 };
 
 // ======================= COMPOSANT HOMEPAGE =======================
-const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies }) => {
+const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies }) => {
     const { t } = useTranslation();
     const phrases = [t('hero_phrases.1'), t('hero_phrases.2'), t('hero_phrases.3')];
     const [currentText, setCurrentText] = useState('');
@@ -230,14 +232,90 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, aproposRef, contactRe
                 <section id="experience" ref={experienceRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                     <div className="max-w-4xl mx-auto px-6">
                         <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('experience_title')}</h2>
+                        <div className="space-y-16">
+                            <div className="flex flex-col sm:flex-row items-start gap-8">
+                                <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
+                                    <img src={t('experience_job1_logo')} alt={`Logo de ${t('experience_job1_company')}`} className="object-contain h-full w-full" />
+                                </div>
+                                <div className="flex-grow">
+                                    <div className="flex justify-between items-start flex-wrap gap-2">
+                                        <div>
+                                            <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job1_title')}</h3>
+                                            <p className="text-lg text-sky-500">{t('experience_job1_company')}</p>
+                                        </div>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job1_date')}</span>
+                                    </div>
+                                    <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job1_desc')}</p>
+                                </div>
+                            </div>
+
+                                        <div className="flex flex-col sm:flex-row items-start gap-8">
+                                <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
+                                    <img src={t('experience_job2_logo')} alt={`Logo de ${t('experience_job2_company')}`} className="object-contain h-full w-full" />
+                                </div>
+                                <div className="flex-grow">
+                                    <div className="flex justify-between items-start flex-wrap gap-2">
+                                        <div>
+                                            <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job2_title')}</h3>
+                                            <p className="text-lg text-sky-500">{t('experience_job2_company')}</p>
+                                        </div>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job2_date')}</span>
+                                    </div>
+                                    <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job2_desc')}</p>
+                                </div>
+                            </div>
+
+                                        <div className="flex flex-col sm:flex-row items-start gap-8">
+                                <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
+                                    <img src={t('experience_job3_logo')} alt={`Logo de ${t('experience_job3_company')}`} className="object-contain h-full w-full" />
+                                </div>
+                                <div className="flex-grow">
+                                    <div className="flex justify-between items-start flex-wrap gap-2">
+                                        <div>
+                                            <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job3_title')}</h3>
+                                            <p className="text-lg text-sky-500">{t('experience_job3_company')}</p>
+                                        </div>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job3_date')}</span>
+                                    </div>
+                                    <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job3_desc')}</p>
+                                </div>
+                            </div>
+
+                                    <div className="flex flex-col sm:flex-row items-start gap-8">
+                            <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
+                                <img src={t('experience_job4_logo')} alt={`Logo de ${t('experience_job4_company')}`} className="object-contain h-full w-full" />
+                            </div>
+                            <div className="flex-grow">
+                                <div className="flex justify-between items-start flex-wrap gap-2">
+                                    <div>
+                                        <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job4_title')}</h3>
+                                        <p className="text-lg text-sky-500">{t('experience_job4_company')}</p>
+                                    </div>
+                                    <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job4_date')}</span>
+                                </div>
+                                <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job4_desc')}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </FadeInSection>
+
+        <FadeInSection>
+                <section id="formation" ref={formationRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
+                    <div className="max-w-4xl mx-auto px-6">
+                        <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('education_title')}</h2>
                         <div className="space-y-8">
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-                                <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job1_title')}</h3><p className="text-lg text-sky-500">{t('experience_job1_company')}</p></div><span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">{t('experience_job1_date')}</span></div>
-                                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job1_desc')}</p>
-                            </div>
-                            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-                                 <div className="flex justify-between items-start flex-wrap"><div><h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job2_title')}</h3><p className="text-lg text-sky-500">{t('experience_job2_company')}</p></div><span className="text-gray-500 dark:text-gray-400 mt-2 md:mt-0">{t('experience_job2_date')}</span></div>
-                                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job2_desc')}</p>
+                                <div className="flex justify-between items-start flex-wrap gap-2">
+                                    <div>
+                                        <h3 className="text-xl font-semibold font-heading dark:text-white">{t('education_degree')}</h3>
+                                        <p className="text-lg text-sky-500">{t('education_school')}</p>
+                                    </div>
+                                    <span className="text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">{t('education_date')}</span>
+                                </div>
+                                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{t('education_desc')}</p>
                             </div>
                         </div>
                     </div>
@@ -375,8 +453,8 @@ const App = () => {
 
     const isScrollingProgrammatically = useRef(false);
 
-    const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
-    const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'apropos': aproposRef, 'contact': contactRef };
+    const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), formationRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
+    const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'formation': formationRef, 'apropos': aproposRef, 'contact': contactRef };
 
     const scrollToSection = (e, id) => {
         e.preventDefault();
@@ -452,6 +530,7 @@ const App = () => {
             default: 
                 return <HomePage 
                     accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef}
+                    formationRef={formationRef}
                     aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage}
                     projectsData={projectsData}
                     technologies={technologies}
