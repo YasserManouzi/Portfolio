@@ -212,14 +212,14 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                                             target="_blank" 
                                             rel="noopener noreferrer" 
                                             aria-label={`Voir le code source de ${project.cardTitle} sur GitHub`}
-                                            className="text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
+                                                    className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors font-semibold"
                                             // Empêche le clic de se propager à la carte entière
                                             onClick={(e) => e.stopPropagation()} 
                                         >
-                                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
+                                            <span>Code</span>
                                         </a>
                                     )}
-                                    {/* ======================================= */}
                                 </div>
                                 </article>
                             ))}
@@ -303,7 +303,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
         </FadeInSection>
 
         <FadeInSection>
-                <section id="formation" ref={formationRef} className="py-24 bg-white dark:bg-gray-900 transition-colors">
+                <section id="formation" ref={formationRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                     <div className="max-w-4xl mx-auto px-6">
                         <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('education_title')}</h2>
                         <div className="space-y-8">
@@ -330,9 +330,12 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{t('about_p1')}</p>
                             <div className="mt-8">
                                 <h3 className="text-2xl font-semibold mb-4 font-heading text-center lg:text-left dark:text-white">{t('about_principles_title')}</h3>
-                                <ul className="space-y-3">
+                                <ul className="space-y-4">
                                     <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">{t('about_principle1_title')}</strong>{t('about_principle1_text')}</span></li>
                                     <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">{t('about_principle2_title')}</strong>{t('about_principle2_text')}</span></li>
+                                    <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">{t('about_principle3_title')}</strong>{t('about_principle3_text')}</span></li>
+                                    <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">{t('about_principle4_title')}</strong>{t('about_principle4_text')}</span></li>
+                                    <li className="flex items-start"><svg className="w-6 h-6 text-sky-500 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span className="text-gray-700 dark:text-gray-300"><strong className="font-semibold text-gray-900 dark:text-white">{t('about_principle5_title')}</strong>{t('about_principle5_text')}</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -431,13 +434,15 @@ const App = () => {
         { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/imageDiceGame.png', details: t('project4_details'), borderColor: 'border-purple-500', repoUrl: 'https://github.com/YasserManouzi/Dice-game' },
     ];
     
-    const technologies = [
-        { name: "HTML", icon: "devicon-html5-plain" },
-        { name: "CSS", icon: "devicon-css3-plain" },
-        { name: "JavaScript", icon: "devicon-javascript-plain" },
+     const technologies = [
         { name: "React", icon: "devicon-react-original" },
+        { name: "JavaScript", icon: "devicon-javascript-plain" },
         { name: "TailwindCSS", icon: "devicon-tailwindcss-plain" },
         { name: "Node.js", icon: "devicon-nodejs-plain" },
+        { name: "Python", icon: "devicon-python-plain" },
+        { name: "PHP", icon: "devicon-php-plain" },
+        { name: "SQL", icon: "devicon-mysql-plain" },
+        { name: "C++", icon: "devicon-cplusplus-plain" },
         { name: "Java", icon: "devicon-java-plain" },
         { name: "C#", icon: "devicon-csharp-plain" },
         { name: "Git", icon: "devicon-git-plain" },

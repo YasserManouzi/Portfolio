@@ -52,17 +52,25 @@
   "education_date": "2020 - 2024", 
   "education_desc": "Spécialisation en développement d'applications web et mobiles, couvrant un large éventail de technologies et de méthodologies de développement.",
   
-  "about_title": "Plus qu'un simple développeur",
-  "about_p1": "Passionné par le développement web, mon aventure a commencé avec une simple ligne de JavaScript qui a animé un élément sur une page. Mon objectif est de créer des interfaces utilisateur intuitives et performantes.",
+   "about_title": "Plus qu'un simple développeur",
+  "about_p1": "Passionné par le développement de logiciels et motivé par le désir constant d'apprendre de nouvelles technologies. J'apprécie particulièrement de prendre des rôles de leadership dans des projets d'équipe, en inspirant et en guidant mes collègues vers l'excellence. Je recherche actuellement un poste à temps partiel qui me permettra d'acquérir plus d'expérience, de relever de nouveaux défis et d'appliquer mes connaissances à des projets concrets.",
   "about_principles_title": "Mes principes",
   "about_principle1_title": "Apprentissage continu : ",
   "about_principle1_text": "Le monde du web évolue vite, et j'adore ça.",
   "about_principle2_title": "La collaboration avant tout : ",
   "about_principle2_text": "Les meilleures solutions naissent du travail d'équipe.",
+  "about_principle3_title": "Rigueur et Dévouement : ",
+  "about_principle3_text": "Je m'investis pleinement pour livrer un travail de qualité, propre et bien testé.",
+  "about_principle4_title": "Leadership Collaboratif : ",
+  "about_principle4_text": "J'aime prendre des initiatives et inspirer l'équipe pour atteindre nos objectifs communs.",
+  "about_principle5_title": "Résolution de Problèmes : ",
+  "about_principle5_text": "J'aborde chaque défi avec une mentalité analytique pour trouver des solutions créatives et efficaces.",
+
   "about_profile_alt": "Photo de profil de Yasser Manouzi",
   "about_name": "Yasser Manouzi",
   "about_job_title": "Développeur Front-end",
   "about_tech_title": "Technologies",
+  
 
   "contact_title": "Contact",
   "contact_subtitle": "Envie de collaborer ? Envoyez-moi un message !",
