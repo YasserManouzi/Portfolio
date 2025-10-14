@@ -12,13 +12,19 @@
 html { 
   scroll-behavior: smooth; 
 }
+.link-active {
+  position: relative;
+  color: #0ea5e9; /* text-sky-500 */
+}
+
 .link-active::after {
   content: '';
-  display: block;
+  position: absolute;
+  bottom: -4px; /* Ajustez pour la distance du soulignement */
+  left: 0;
   width: 100%;
-  height: 2px;
-  background: #0ea5e9;
-  margin-top: 5px;
+  height: 2px; /* Épaisseur du soulignement */
+  background-color: #0ea5e9; /* text-sky-500 */
 }
 .typing-cursor { 
   animation: blink 1s infinite; 
@@ -113,3 +119,4 @@ html {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+

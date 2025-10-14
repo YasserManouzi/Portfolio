@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ThemeToggle from './ThemeToggle';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import CustomScrollbar from './CustomScrollbar';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+
 
 // COMPOSANT POUR L'ANIMATION D'APPARITION
 const FadeInSection = ({ children }) => {
@@ -91,9 +93,9 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
 };
 
 // ======================= COMPOSANT HOMEPAGE =======================
-const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies }) => {
+const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies, theme }) => {
     const { t } = useTranslation();
-    const phrases = [t('hero_phrases.1'), t('hero_phrases.2'), t('hero_phrases.3')];
+    const phrases = useMemo(() => [t('hero_phrases.1'), t('hero_phrases.2'), t('hero_phrases.3')], [t]);
     const [currentText, setCurrentText] = useState('');
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -124,14 +126,17 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let particles = [], animId = null;
+
+        const particleColor = theme === 'dark' 
+            ? 'rgba(56, 189, 248, 0.7)' // sky-500 pour le thème sombre
+            : 'rgba(2, 132, 199, 0.6)'; 
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             particles = [];
             for (let i = 0; i < 80; i++) particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 2 + 1, dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5 });
         };
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        
         const animate = () => {
             if (!inView) {
                 animId = requestAnimationFrame(animate);
@@ -141,7 +146,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
             particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.fillStyle = particleColor;
                 ctx.fill();
                 p.x += p.dx;
                 p.y += p.dy;
@@ -151,24 +156,38 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
             animId = requestAnimationFrame(animate);
         };
         animate();
-        resizeCanvas(); // Appeler resizeCanvas après avoir défini les particules
+        resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
         return () => {
             window.removeEventListener('resize', resizeCanvas);
             if (animId) cancelAnimationFrame(animId);
         };
-    }, [inView]);
+    }, [inView, theme]);
 
     const { ref: technologiesRef, inView: technologiesInView } = useInView({ triggerOnce: true, threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
     const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
+    const contactButtonClasses = theme === 'dark'
+        ? 'border-white text-white hover:bg-white hover:text-gray-900'
+        : 'border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white';
+
+    const socialIconClasses = theme === 'dark' ? 'text-gray-300' : 'text-gray-600';
+
     return (
         <>
-            <section id="accueil" ref={(el) => { accueilRef.current = el; inViewRef(el); }} className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-slate-800 text-white px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen">
+            <section id="accueil" ref={(el) => { accueilRef.current = el; inViewRef(el); }} className={`flex flex-col items-center justify-center px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen 
+                    ${theme === 'dark'
+                        ? 'bg-gradient-to-br from-gray-900 to-slate-800 text-white'
+                        : 'bg-gradient-to-br from-white to-gray-100 text-gray-900'
+                    }`
+                }
+            >
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
                 <div className="absolute inset-0 flex items-center justify-center z-0">
-                    <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
+                    <div className={`w-96 h-96 bg-sky-500 rounded-full filter blur-3xl animate-pulse-slow ${
+                        theme === 'dark' ? 'mix-blend-lighten opacity-30' : 'mix-blend-multiply opacity-20'
+                    }`}></div>
                 </div>
                 <div className="relative z-10 animate-fade-in-up">
                     <h1 className="text-4xl md:text-6xl font-extrabold mb-4 font-heading">{t('hero_greeting')} <span className="text-sky-500">Yasser Manouzi</span></h1>
@@ -182,45 +201,59 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                         <a href="https://linkedin.com/in/yasser-manouzi" target="_blank" rel="noopener noreferrer" aria-label="Mon profil LinkedIn" className="text-gray-300 hover:text-sky-500 transition-colors transform hover:-translate-y-1"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.766s.784-1.766 1.75-1.766 1.75.79 1.75 1.766-.783 1.766-1.75 1.766zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
                     </div>
                 </div>
+                {/* AMÉLIORATION SCROLL : Indicateur visuel pour inciter l'utilisateur à défiler */}
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
+                    <a 
+                        href="#projets" 
+                        onClick={(e) => { 
+                            e.preventDefault(); 
+                            projetsRef.current?.scrollIntoView({ behavior: 'smooth' }); 
+                        }}
+                        aria-label="Faire défiler vers la section projets"
+                        className="p-2 text-white/50 hover:text-white transition-colors animate-bounce"
+                    >
+                        <ChevronDown size={32} />
+                    </a>
+                </div>
             </section>
 
             <FadeInSection>
                 <section id="projets" ref={projetsRef} className="py-24 bg-white dark:bg-gray-900 transition-colors animated-section-background">
                     <div className="absolute inset-0 flex items-center justify-center z-0">
-                    <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
-                </div>
+                        <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
+                    </div>
                     <div className="max-w-6xl mx-auto px-6">
                         <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('projects_title')}</h2>
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                             {projectsData.map((project) => (
                                 <article key={project.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2 cursor-pointer" onClick={() => setCurrentPage(project.id)}>
-                                <div className="flex-grow">
-                                <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                                    <img 
-                                        src={project.image} 
-                                        alt={`${t('project_image_alt')} ${project.cardTitle}`}
-                                        className={`w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 border-4 ${project.borderColor}`} 
-                                    />
-                                </div>
-                                    <h3 className="text-xl font-semibold mb-2 font-heading dark:text-white">{project.cardTitle}</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
-                                    <div className="mt-auto pt-4 flex justify-between items-center"></div>
-                                    <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">{t('project_view')}</span>
-                                    {project.repoUrl && (
-                                    <a 
-                                            href={project.repoUrl} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer" 
-                                            aria-label={`Voir le code source de ${project.cardTitle} sur GitHub`}
+                                    <div className="flex-grow">
+                                        <div className="h-40 mb-6 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                                            <img 
+                                                src={project.image} 
+                                                alt={`${t('project_image_alt')} ${project.cardTitle}`}
+                                                className={`w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 border-4 ${project.borderColor}`} 
+                                            />
+                                        </div>
+                                        <h3 className="text-xl font-semibold mb-2 font-heading dark:text-white">{project.cardTitle}</h3>
+                                        <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
+                                        <div className="mt-auto pt-4 flex justify-between items-center">
+                                            <span className="text-sky-500 hover:text-sky-600 font-semibold transition-colors">{t('project_view')}</span>
+                                            {project.repoUrl && (
+                                                <a 
+                                                    href={project.repoUrl} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    aria-label={`Voir le code source de ${project.cardTitle} sur GitHub`}
                                                     className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors font-semibold"
-                                            // Empêche le clic de se propager à la carte entière
-                                            onClick={(e) => e.stopPropagation()} 
-                                        >
-                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
-                                            <span>Code</span>
-                                        </a>
-                                    )}
-                                </div>
+                                                    onClick={(e) => e.stopPropagation()} 
+                                                >
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.475.087.643-.206.643-.453 0-.222-.007-.975-.011-1.912-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.619.069-.608.069-.608 1.006.07 1.532 1.037 1.532 1.037.89 1.529 2.336 1.087 2.909.832.091-.649.351-1.087.636-1.338-2.22-.253-4.555-1.115-4.555-4.945 0-1.093.39-1.988 1.029-2.695-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.606 9.606 0 0112 5.044c.85.004 1.701.114 2.492.327 1.909-1.292 2.747-1.022 2.747-1.022.546 1.379.203 2.398.1 2.65.64.707 1.029 1.602 1.029 2.695 0 3.83-2.339 4.687-4.562 4.935.359.307.678.915.678 1.846 0 1.338-.012 2.419-.012 2.747 0 .247.169.542.648.452C19.146 20.19 22 16.438 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd"/></svg>
+                                                    <span>Code</span>
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
                                 </article>
                             ))}
                         </div>
@@ -248,8 +281,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                                     <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job1_desc')}</p>
                                 </div>
                             </div>
-
-                                        <div className="flex flex-col sm:flex-row items-start gap-8">
+                            <div className="flex flex-col sm:flex-row items-start gap-8">
                                 <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
                                     <img src={t('experience_job2_logo')} alt={`Logo de ${t('experience_job2_company')}`} className="object-contain h-full w-full" />
                                 </div>
@@ -264,8 +296,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                                     <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job2_desc')}</p>
                                 </div>
                             </div>
-
-                                        <div className="flex flex-col sm:flex-row items-start gap-8">
+                            <div className="flex flex-col sm:flex-row items-start gap-8">
                                 <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
                                     <img src={t('experience_job3_logo')} alt={`Logo de ${t('experience_job3_company')}`} className="object-contain h-full w-full" />
                                 </div>
@@ -280,29 +311,27 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                                     <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job3_desc')}</p>
                                 </div>
                             </div>
-
-                                    <div className="flex flex-col sm:flex-row items-start gap-8">
-                            <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
-                                <img src={t('experience_job4_logo')} alt={`Logo de ${t('experience_job4_company')}`} className="object-contain h-full w-full" />
-                            </div>
-                            <div className="flex-grow">
-                                <div className="flex justify-between items-start flex-wrap gap-2">
-                                    <div>
-                                        <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job4_title')}</h3>
-                                        <p className="text-lg text-sky-500">{t('experience_job4_company')}</p>
-                                    </div>
-                                    <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job4_date')}</span>
+                            <div className="flex flex-col sm:flex-row items-start gap-8">
+                                <div className="w-24 h-24 flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-md flex items-center justify-center p-2">
+                                    <img src={t('experience_job4_logo')} alt={`Logo de ${t('experience_job4_company')}`} className="object-contain h-full w-full" />
                                 </div>
-                                <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job4_desc')}</p>
+                                <div className="flex-grow">
+                                    <div className="flex justify-between items-start flex-wrap gap-2">
+                                        <div>
+                                            <h3 className="text-xl font-semibold font-heading dark:text-white">{t('experience_job4_title')}</h3>
+                                            <p className="text-lg text-sky-500">{t('experience_job4_company')}</p>
+                                        </div>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">{t('experience_job4_date')}</span>
+                                    </div>
+                                    <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{t('experience_job4_desc')}</p>
+                                </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
-            </section>
-        </FadeInSection>
+                </section>
+            </FadeInSection>
 
-        <FadeInSection>
+            <FadeInSection>
                 <section id="formation" ref={formationRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
                     <div className="max-w-4xl mx-auto px-6">
                         <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('education_title')}</h2>
@@ -324,7 +353,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
 
             <FadeInSection>
                 <section id="apropos" ref={aproposRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
-                     <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-5 gap-x-16 items-center">
+                    <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-5 gap-x-16 items-center">
                         <div className="lg:col-span-3">
                             <h2 className="text-4xl font-bold mb-6 font-heading text-center lg:text-left dark:text-white">{t('about_title')}</h2>
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{t('about_p1')}</p>
@@ -341,7 +370,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                         </div>
                         <div className="lg:col-span-2 mt-12 lg:mt-0">
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center">
-                                 <img src="images/imageProfil.jpg" alt={t('about_profile_alt')} className="rounded-full shadow-xl border-4 border-sky-500 dark:border-sky-400 w-32 h-32 object-cover mx-auto -mt-20 mb-4 transform transition-transform hover:scale-105" />
+                                <img src="images/imageProfil.jpg" alt={t('about_profile_alt')} className="rounded-full shadow-xl border-4 border-sky-500 dark:border-sky-400 w-32 h-32 object-cover mx-auto -mt-20 mb-4 transform transition-transform hover:scale-105" />
                                 <h3 className="text-2xl font-bold font-heading dark:text-white">{t('about_name')}</h3>
                                 <p className="text-gray-500 dark:text-gray-400 mb-6">{t('about_job_title')}</p>
                                 <h4 className="text-xl font-semibold mb-4 font-heading dark:text-white">{t('about_tech_title')}</h4>
@@ -373,18 +402,13 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
 };
 
 // ======================= COMPOSANT PROJECTPAGE =======================
-const ProjectPage = ({ title, description, details, fullImage, setCurrentPage }) => {
+const ProjectPage = ({ title, description, details, fullImage, scrollToSection   }) => {
     const { t } = useTranslation();
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+<div className="min-h-screen bg-white dark:bg-gray-900 transition-colors flex justify-center items-start py-12">
             <div className="w-full max-w-4xl mx-auto px-6 py-12 pt-24 animate-fade-in-up">
-                <button onClick={() => {
-                    setCurrentPage('home');
-                        // On attend que la HomePage soit rendue avant de scroller
-                        setTimeout(() => {
-                            document.getElementById('projets')?.scrollIntoView({ behavior: 'smooth' });
-                        }, 50);
-                    }} 
+                <button 
+                    onClick={(e) => scrollToSection(e, 'projets')} 
                     className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -408,85 +432,95 @@ const ProjectPage = ({ title, description, details, fullImage, setCurrentPage })
 const CoverLetterPage = ({ setCurrentPage }) => {
     const { t } = useTranslation();
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors flex justify-center items-center">
-            <div className="w-full max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
-                <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    {t('project_page_back')}
-                </button>
-                <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 font-heading">{t('nav_coverLetter')}</h1>
+        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors pt-24 pb-12">
+            <div className="w-full max-w-4xl mx-auto px-6 animate-fade-in-up">
+                {/* Bouton repositionné : sticky / self-start pour rester sous la navbar */}
+                <div className="sticky top-24 z-30 self-start mb-6">
+                    <button
+  onClick={() => setCurrentPage?.('home')}
+  className="flex items-center gap-2 text-sky-500 hover:text-sky-600 font-semibold mb-8"
+>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        {t('project_page_back')}
+                    </button>
+                </div>
+
+                <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-6 font-heading">
+                    {t('nav_coverLetter')}
+                </h1>
+
                 <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{t('cover_letter_content')}</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                        {t('cover_letter_content')}
+                    </p>
                 </div>
             </div>
         </div>
     );
 };
 
+const technologies = [
+    { name: "React", icon: "devicon-react-original" },
+    { name: "JavaScript", icon: "devicon-javascript-plain" },
+    { name: "TailwindCSS", icon: "devicon-tailwindcss-plain" },
+    { name: "Node.js", icon: "devicon-nodejs-plain" },
+    { name: "Python", icon: "devicon-python-plain" },
+    { name: "PHP", icon: "devicon-php-plain" },
+    { name: "SQL", icon: "devicon-mysql-plain" },
+    { name: "C++", icon: "devicon-cplusplus-plain" },
+    { name: "Java", icon: "devicon-java-plain" },
+    { name: "C#", icon: "devicon-csharp-plain" },
+    { name: "Git", icon: "devicon-git-plain" },
+];
+
 // ======================= COMPOSANT PRINCIPAL APP =======================
+
 const App = () => {
-    const { t, i18n } = useTranslation();
-
-    const projectsData = [
-        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/StageEtu'},
-        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details'), borderColor: 'border-blue-500', repoUrl: 'https://github.com/YasserManouzi/Battleship'},
-        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/imageGestionBanque.png', details: t('project3_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/https://github.com/YasserManouzi/GestionBanque' },
-        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/imageDiceGame.png', details: t('project4_details'), borderColor: 'border-purple-500', repoUrl: 'https://github.com/YasserManouzi/Dice-game' },
-    ];
-    
-     const technologies = [
-        { name: "React", icon: "devicon-react-original" },
-        { name: "JavaScript", icon: "devicon-javascript-plain" },
-        { name: "TailwindCSS", icon: "devicon-tailwindcss-plain" },
-        { name: "Node.js", icon: "devicon-nodejs-plain" },
-        { name: "Python", icon: "devicon-python-plain" },
-        { name: "PHP", icon: "devicon-php-plain" },
-        { name: "SQL", icon: "devicon-mysql-plain" },
-        { name: "C++", icon: "devicon-cplusplus-plain" },
-        { name: "Java", icon: "devicon-java-plain" },
-        { name: "C#", icon: "devicon-csharp-plain" },
-        { name: "Git", icon: "devicon-git-plain" },
-    ];
-
+    const { t } = useTranslation();
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('accueil');
     const [currentPage, setCurrentPage] = useState('home');
-    const [theme, setTheme] = useState(() => {
-        if (localStorage.getItem('theme')) return localStorage.getItem('theme');
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    });
-
+    const [theme, setTheme] = useState(() => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    
+    const [previousSectionId, setPreviousSectionId] = useState(null);
+    const [nextSectionId, setNextSectionId] = useState('projets');
+    
     const isScrollingProgrammatically = useRef(false);
-
     const accueilRef = useRef(null), projetsRef = useRef(null), experienceRef = useRef(null), formationRef = useRef(null), aproposRef = useRef(null), contactRef = useRef(null);
-    const sections = { 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'formation': formationRef, 'apropos': aproposRef, 'contact': contactRef };
+
+    const sections = useMemo(() => ({ 'accueil': accueilRef, 'projets': projetsRef, 'experience': experienceRef, 'formation': formationRef, 'apropos': aproposRef, 'contact': contactRef }), []);
+    const sectionOrder = useMemo(() => ['accueil', 'projets', 'experience', 'formation', 'apropos', 'contact'], []);
+    
+    const projectsData = useMemo(() => [
+        { id: 'project1', cardTitle: t('project1_card_title'), pageTitle: t('project1_page_title'), description: t('project1_description'), image: 'images/stageEtu.png', fullImage: 'images/imageAppStage.png', details: t('project1_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/StageEtu' },
+        { id: 'project2', cardTitle: t('project2_card_title'), pageTitle: t('project2_page_title'), description: t('project2_description'), image: 'images/battleship.png', fullImage: 'images/battleship.png', details: t('project2_details'), borderColor: 'border-blue-500', repoUrl: 'https://github.com/YasserManouzi/Battleship' },
+        { id: 'project3', cardTitle: t('project3_card_title'), pageTitle: t('project3_page_title'), description: t('project3_description'), image: 'images/gestionBanque.png', fullImage: 'images/imageGestionBanque.png', details: t('project3_details'), borderColor: 'border-red-500', repoUrl: 'https://github.com/YasserManouzi/GestionBanque' },
+        { id: 'project4', cardTitle: t('project4_card_title'), pageTitle: t('project4_page_title'), description: t('project4_description'), image: 'images/diceGame.png', fullImage: 'images/imageDiceGame.png', details: t('project4_details'), borderColor: 'border-purple-500', repoUrl: 'https://github.com/YasserManouzi/Dice-game' },
+    ], [t]);
 
     const scrollToSection = (e, id) => {
         e.preventDefault();
+
         setActiveSection(id);
         
-        // On indique qu'un scroll programmé est en cours
         isScrollingProgrammatically.current = true;
-
-        const performScroll = (sectionId) => {
-            const element = sections[sectionId]?.current;
+        const performScroll = () => {
+            const element = sections[id]?.current;
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // On attend la fin du scroll pour réactiver la détection automatique
-                setTimeout(() => {
-                    isScrollingProgrammatically.current = false;
-                }, 1000); // 1 seconde est une durée sûre pour la plupart des scrolls
+                setTimeout(() => { isScrollingProgrammatically.current = false; }, 1000);
+            } else {
+                isScrollingProgrammatically.current = false;
             }
         };
 
         if (currentPage !== 'home') {
             setCurrentPage('home');
-            setTimeout(() => {
-                performScroll(id);
-            }, 100);
+            setTimeout(performScroll, 50);
         } else {
-            performScroll(id);
+            performScroll();
         }
     };
 
@@ -496,74 +530,109 @@ const App = () => {
         localStorage.setItem('theme', theme);
     }, [theme]);
 
-   useEffect(() => {
+    useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-
-            // Si un scroll programmé est en cours, on ignore la détection
-            if (isScrollingProgrammatically.current) return;
-
-            if (currentPage === 'home') {
-                let currentSectionId = 'accueil';
-                const isAtBottom = (window.innerHeight + Math.ceil(window.scrollY)) >= document.documentElement.scrollHeight;
-                if (isAtBottom) {
-                    currentSectionId = 'contact';
-                } else {
-                    const scrollPosition = window.scrollY + 150;
-                    for (const sectionId in sections) {
-                        const section = sections[sectionId].current;
-                        if (section && section.offsetTop <= scrollPosition) {
-                            currentSectionId = sectionId;
-                        }
-                    }
+            const scrollY = window.scrollY;
+            setIsScrolled(scrollY > 50);
+            if (isScrollingProgrammatically.current || currentPage !== 'home') return;
+            
+            let currentSectionId = sectionOrder[0];
+            for (const sectionId of sectionOrder) {
+                const section = sections[sectionId].current;
+               if (section && section.offsetTop <= scrollY + window.innerHeight / 2) {
+                    currentSectionId = sectionId;
                 }
+            }
+            if (activeSection !== currentSectionId) {
                 setActiveSection(currentSectionId);
             }
+
+            const currentIndex = sectionOrder.indexOf(currentSectionId);
+            setPreviousSectionId(currentIndex > 0 ? sectionOrder[currentIndex - 1] : null);
+            setNextSectionId(currentIndex + 1 < sectionOrder.length ? sectionOrder[currentIndex + 1] : null);
         };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [currentPage, sections]);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [currentPage, sections, sectionOrder, activeSection]);
+
+   useEffect(() => {
+        if (currentPage !== 'home') {
+            window.scrollTo(0, 0);
+        }
+    }, [currentPage]);
+
+
+    const handleScrollUp = () => {
+        if (previousSectionId) {
+            scrollToSection({ preventDefault: () => {} }, previousSectionId);
+        }
+    };
+    const handleScrollDown = () => {
+        if (nextSectionId) {
+            scrollToSection({ preventDefault: () => {} }, nextSectionId);
+        }
+    };
+
     const renderContent = () => {
         const project = projectsData.find(p => p.id === currentPage);
         if (project) {
-            return <ProjectPage setCurrentPage={setCurrentPage} title={project.pageTitle} description={project.description} fullImage={project.fullImage} details={project.details} />;
+            return <ProjectPage scrollToSection={scrollToSection} title={project.pageTitle} description={project.description} fullImage={project.fullImage} details={project.details} />;
         }
         switch (currentPage) {
-            case 'coverLetter': 
-                return <CoverLetterPage setCurrentPage={setCurrentPage} />;
-            case 'home':
-            default: 
-                return <HomePage 
-                    accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef}
-                    formationRef={formationRef}
-                    aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage}
-                    projectsData={projectsData}
-                    technologies={technologies}
-                />;
+            case 'coverLetter':
+    return <CoverLetterPage setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} />;
+
+            case 'home': default: return <HomePage accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef} formationRef={formationRef} aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage} projectsData={projectsData} technologies={technologies} theme={theme} />;
         }
     };
 
     const { scrollYProgress } = useScroll();
-    const scaleY = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    });
+    const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
     return (
         <>
             <CustomScrollbar scrollYProgress={scaleY} />
-            <div className="transition-colors duration-300">
-                <Navbar
-                    isScrolled={isScrolled}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    scrollToSection={scrollToSection}
-                    activeSection={activeSection}
-                    theme={theme}
-                    setTheme={setTheme}
-                />
-                <main className="flex-grow pt-[84px] bg-white dark:bg-gray-900">
+            <div className="transition-colors duration-300 bg-white dark:bg-gray-900">
+                <Navbar isScrolled={isScrolled} currentPage={currentPage} setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} activeSection={activeSection} theme={theme} setTheme={setTheme} />
+                
+                <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-2">
+                    <AnimatePresence>
+                        {isScrolled && currentPage === 'home' && previousSectionId && (
+                            <motion.button 
+                                onClick={handleScrollUp}
+                                className="bg-sky-500/80 hover:bg-sky-600 text-white p-3 rounded-full shadow-lg backdrop-blur-sm" 
+                                aria-label="Aller à la section précédente"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }} 
+                                whileHover={{ scale: 1.1 }} 
+                                whileTap={{ scale: 0.9 }} 
+                            >
+                                <ChevronUp size={24} />
+                            </motion.button>
+                        )}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                        {isScrolled && currentPage === 'home' && nextSectionId && (
+                            <motion.button 
+                                onClick={handleScrollDown}
+                                className="bg-sky-500/80 hover:bg-sky-600 text-white p-3 rounded-full shadow-lg backdrop-blur-sm" 
+                                aria-label="Aller à la section suivante"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }} 
+                                whileHover={{ scale: 1.1 }} 
+                                whileTap={{ scale: 0.9 }} 
+                            >
+                                <ChevronDown size={24} />
+                            </motion.button>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                <main className="flex-grow">
                     {renderContent()}
                 </main>
                 <footer className="bg-gray-800 dark:bg-black text-white py-6 text-center border-t border-transparent dark:border-gray-800 transition-colors">
