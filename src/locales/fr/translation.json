@@ -51,6 +51,18 @@
   "education_school": "Collège Montmorency", 
   "education_date": "2020 - 2024", 
   "education_desc": "Spécialisation en développement d'applications web et mobiles, couvrant un large éventail de technologies et de méthodologies de développement.",
+
+  "education_courses_title": "Cours pertinents",
+  "course_project_dev_title": "Projet et Développement",
+  "course_project_dev_desc": "Gestion d'un projet full-stack (C#) en équipe pour créer une application de gestion de stages, en appliquant les méthodologies Agile et Scrum.",
+  "course_data_structures_title": "Structures de Données",
+  "course_data_structures_desc": "Application pratique des structures de données dans un projet de groupe, avec la création d'un jeu Battleship en Java.",
+  "course_mobile_app_title": "Applications Mobiles",
+  "course_mobile_app_desc": "Introduction au développement d'applications mobiles natives pour Android, en utilisant Java et Kotlin.",
+  "course_iot_title": "Objets Connectés (IoT)",
+  "course_iot_desc": "Programmation de systèmes embarqués avec Python sur des microcontrôleurs comme le Raspberry Pi Pico.",
+  "course_communication_title": "Communication Professionnelle",
+  "course_communication_desc": "Acquisition des concepts clés de la communication interpersonnelle et de la collaboration en milieu professionnel.",
   
    "about_title": "Plus qu'un simple développeur",
   "about_p1": "Passionné par le développement de logiciels et motivé par le désir constant d'apprendre de nouvelles technologies. J'apprécie particulièrement de prendre des rôles de leadership dans des projets d'équipe, en inspirant et en guidant mes collègues vers l'excellence. Je recherche actuellement un poste à temps partiel qui me permettra d'acquérir plus d'expérience, de relever de nouveaux défis et d'appliquer mes connaissances à des projets concrets.",
@@ -70,6 +82,10 @@
   "about_name": "Yasser Manouzi",
   "about_job_title": "Développeur Front-end",
   "about_tech_title": "Technologies",
+  "about_tools_title": "Outils et Méthodologies",
+
+  "about_cv_view": "Voir mon CV",
+  "about_cv_download": "Télécharger le CV",
   
 
   "contact_title": "Contact",

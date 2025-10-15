@@ -52,6 +52,19 @@
   "education_date": "2020 - 2024", 
   "education_desc": "Specializing in web and mobile application development, covering a wide range of technologies and development methodologies.", 
 
+
+  "education_courses_title": "Relevant Courses",
+  "course_project_dev_title": "Project and Development",
+  "course_project_dev_desc": "Managed a full-stack team project (C#) to build an internship management application, applying Agile and Scrum methodologies.",
+  "course_data_structures_title": "Data Structures",
+  "course_data_structures_desc": "Practical application of data structures in a group project, culminating in the creation of a Battleship game in Java.",
+  "course_mobile_app_title": "Mobile Applications",
+  "course_mobile_app_desc": "Introduction to native mobile application development for Android, using Java and Kotlin.",
+  "course_iot_title": "Connected Objects (IoT)",
+  "course_iot_desc": "Programming of embedded systems with Python on microcontrollers like the Raspberry Pi Pico.",
+  "course_communication_title": "Professional Communication",
+  "course_communication_desc": "Acquired key concepts of interpersonal communication and collaboration in a professional environment.",
+
   "about_title": "More than just a developer",
   "about_p1": "Passionate about software development and motivated by the constant desire to learn new technologies. I particularly enjoy taking on leadership roles within team projects, inspiring and guiding colleagues toward excellence. I am currently seeking a part-time position that will allow me to gain more experience, take on new challenges, and apply my knowledge to real-world projects.",
   "about_principles_title": "My Principles",
@@ -70,6 +83,10 @@
   "about_name": "Yasser Manouzi",
   "about_job_title": "Front-end Developer",
   "about_tech_title": "Technologies",
+    "about_tools_title": "Tools and Methodologies",
+
+    "about_cv_view": "View my CV",
+  "about_cv_download": "Download CV",
 
   "contact_title": "Contact",
   "contact_subtitle": "Want to collaborate? Send me a message!",

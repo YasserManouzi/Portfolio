@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from 'react-i18next';
 import CustomScrollbar from './CustomScrollbar';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, Recycle, Users, Eye, Download } from 'lucide-react';
 
 
 // COMPOSANT POUR L'ANIMATION D'APPARITION
@@ -93,7 +93,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
 };
 
 // ======================= COMPOSANT HOMEPAGE =======================
-const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies, theme }) => {
+const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef, setCurrentPage, projectsData, technologies, theme,  toolsAndMethods}) => {
     const { t } = useTranslation();
     const phrases = useMemo(() => [t('hero_phrases.1'), t('hero_phrases.2'), t('hero_phrases.3')], [t]);
     const [currentText, setCurrentText] = useState('');
@@ -176,11 +176,14 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
 
     return (
         <>
-            <section id="accueil" ref={(el) => { accueilRef.current = el; inViewRef(el); }} className={`flex flex-col items-center justify-center px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen 
+            <section id="accueil" ref={(el) => { accueilRef.current = el; inViewRef(el); }}  className={`flex flex-col items-center justify-center px-6 text-center pt-20 pb-20 relative overflow-hidden min-h-screen  
                     ${theme === 'dark'
                         ? 'bg-gradient-to-br from-gray-900 to-slate-800 text-white'
                         : 'bg-gradient-to-br from-white to-gray-100 text-gray-900'
-                    }`
+                    }
+                    after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-64 
+                    after:bg-gradient-to-t after:from-gray-100 after:to-transparent 
+                    dark:after:from-slate-800`
                 }
             >
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
@@ -218,7 +221,7 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
             </section>
 
             <FadeInSection>
-                <section id="projets" ref={projetsRef} className="py-24 bg-white dark:bg-gray-900 transition-colors animated-section-background">
+                <section id="projets" ref={projetsRef} className="py-24 bg-gray-100 dark:bg-slate-800 transition-colors animated-section-background">
                     <div className="absolute inset-0 flex items-center justify-center z-0">
                         <div className="w-96 h-96 bg-sky-500 rounded-full mix-blend-lighten filter blur-3xl opacity-30 animate-pulse-slow"></div>
                     </div>
@@ -332,24 +335,46 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
             </FadeInSection>
 
             <FadeInSection>
-                <section id="formation" ref={formationRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
-                    <div className="max-w-4xl mx-auto px-6">
-                        <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('education_title')}</h2>
-                        <div className="space-y-8">
-                            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-                                <div className="flex justify-between items-start flex-wrap gap-2">
-                                    <div>
-                                        <h3 className="text-xl font-semibold font-heading dark:text-white">{t('education_degree')}</h3>
-                                        <p className="text-lg text-sky-500">{t('education_school')}</p>
-                                    </div>
-                                    <span className="text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">{t('education_date')}</span>
-                                </div>
-                                <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{t('education_desc')}</p>
-                            </div>
+    <section id="formation" ref={formationRef} className="py-24 bg-white dark:bg-gray-950 transition-colors animated-section-background">
+        <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center mb-12 font-heading dark:text-white">{t('education_title')}</h2>
+            <div className="space-y-8">
+                <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+                    <div className="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <h3 className="text-xl font-semibold font-heading dark:text-white">{t('education_degree')}</h3>
+                            <p className="text-lg text-sky-500">{t('education_school')}</p>
                         </div>
+                        <span className="text-gray-500 dark:text-gray-400 mt-2 sm:mt-0">{t('education_date')}</span>
                     </div>
-                </section>
-            </FadeInSection>
+                    <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{t('education_desc')}</p>
+                    
+                    {/* ===== NOUVELLE SECTION AJOUTÉE CI-DESSOUS ===== */}
+                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">{t('education_courses_title')}</h4>
+                        <ul className="space-y-3 list-disc list-inside text-gray-600 dark:text-gray-300">
+                            <li>
+                                <strong className="font-medium text-gray-900 dark:text-white">{t('course_project_dev_title')}:</strong> {t('course_project_dev_desc')}
+                            </li>
+                            <li>
+                                <strong className="font-medium text-gray-900 dark:text-white">{t('course_data_structures_title')}:</strong> {t('course_data_structures_desc')}
+                            </li>
+                             <li>
+                                <strong className="font-medium text-gray-900 dark:text-white">{t('course_mobile_app_title')}:</strong> {t('course_mobile_app_desc')}
+                            </li>
+                            <li>
+                                <strong className="font-medium text-gray-900 dark:text-white">{t('course_iot_title')}:</strong> {t('course_iot_desc')}
+                            </li>
+                             <li>
+                                <strong className="font-medium text-gray-900 dark:text-white">{t('course_communication_title')}:</strong> {t('course_communication_desc')}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</FadeInSection>
 
             <FadeInSection>
                 <section id="apropos" ref={aproposRef} className="py-24 bg-gray-50 dark:bg-gray-950 transition-colors animated-section-background">
@@ -357,6 +382,27 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                         <div className="lg:col-span-3">
                             <h2 className="text-4xl font-bold mb-6 font-heading text-center lg:text-left dark:text-white">{t('about_title')}</h2>
                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{t('about_p1')}</p>
+                            <div className="mt-8 mb-8 flex flex-col sm:flex-row gap-4">
+                                {/* --- Bouton pour Ouvrir le CV dans un nouvel onglet --- */}
+                                <a 
+                                    href="public/cv.pdf" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-colors transform hover:-translate-y-1"
+                                >
+                                    <Eye size={20} />
+                                    <span>{t('about_cv_view')}</span>
+                                </a>
+                                {/* --- Bouton pour Télécharger le CV --- */}
+                                <a 
+                                    href="public/cv.pdf"
+                                    download="CV_Yasser_Manouzi.pdf"
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border-2 border-gray-800 dark:border-white text-gray-800 dark:text-white rounded-full hover:bg-gray-800 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-colors transform hover:-translate-y-1"
+                                >
+                                    <Download size={20} />
+                                    <span>{t('about_cv_download')}</span>
+                                </a>
+                            </div>
                             <div className="mt-8">
                                 <h3 className="text-2xl font-semibold mb-4 font-heading text-center lg:text-left dark:text-white">{t('about_principles_title')}</h3>
                                 <ul className="space-y-4">
@@ -379,6 +425,19 @@ const HomePage = ({ accueilRef, projetsRef, experienceRef, formationRef, apropos
                                         <motion.div key={tech.name} variants={itemVariants} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium px-3 py-1 rounded-full transition-transform transform hover:scale-110">
                                             <i className={`${tech.icon} text-lg`}></i>
                                             <span>{tech.name}</span>
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                                 <h4 className="text-xl font-semibold mt-6 mb-4 font-heading dark:text-white">{t('about_tools_title')}</h4>
+                                <motion.div className="flex flex-wrap justify-center gap-2" variants={containerVariants} initial="hidden" animate={technologiesInView ? "visible" : "hidden"}>
+                                    {toolsAndMethods.map((tool) => (
+                                        <motion.div key={tool.name} variants={itemVariants} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium px-3 py-1 rounded-full transition-transform transform hover:scale-110">
+                                            {tool.icon.startsWith('devicon') ? (
+                                                <i className={`${tool.icon} text-lg`}></i>
+                                            ) : (
+                                                tool.icon === 'Recycle' ? <Recycle size={16} className="text-sky-500" /> : <Users size={16} className="text-sky-500" />
+                                            )}
+                                            <span>{tool.name}</span>
                                         </motion.div>
                                     ))}
                                 </motion.div>
@@ -462,17 +521,33 @@ const CoverLetterPage = ({ setCurrentPage }) => {
 };
 
 const technologies = [
-    { name: "React", icon: "devicon-react-original" },
-    { name: "JavaScript", icon: "devicon-javascript-plain" },
-    { name: "TailwindCSS", icon: "devicon-tailwindcss-plain" },
-    { name: "Node.js", icon: "devicon-nodejs-plain" },
-    { name: "Python", icon: "devicon-python-plain" },
-    { name: "PHP", icon: "devicon-php-plain" },
-    { name: "SQL", icon: "devicon-mysql-plain" },
-    { name: "C++", icon: "devicon-cplusplus-plain" },
-    { name: "Java", icon: "devicon-java-plain" },
-    { name: "C#", icon: "devicon-csharp-plain" },
-    { name: "Git", icon: "devicon-git-plain" },
+    { name: "React", icon: "devicon-react-original colored" },
+    { name: "JavaScript", icon: "devicon-javascript-plain colored" },
+    { name: "TailwindCSS", icon: "devicon-tailwindcss-plain colored" },
+    { name: "Node.js", icon: "devicon-nodejs-plain colored" },
+    { name: "Python", icon: "devicon-python-plain colored" },
+    { name: "PHP", icon: "devicon-php-plain colored" },
+    { name: "SQL", icon: "devicon-mysql-plain colored" },
+    { name: "C++", icon: "devicon-cplusplus-plain colored" },
+    { name: "Java", icon: "devicon-java-plain colored" },
+    { name: "C#", icon: "devicon-csharp-plain colored" },
+    { name: "Git", icon: "devicon-git-plain colored" },
+];
+
+const toolsAndMethods = [
+    { name: "VS studio", icon: "devicon-visualstudio-plain colored" },
+    { name: "Android Studio", icon: "devicon-androidstudio-plain colored" },
+    { name: "PyCharm", icon: "devicon-pycharm-plain colored" },
+    { name: "PhpMyAdmin", icon: "devicon-phpmyadmin-plain colored" },
+    { name: "Jira", icon: "devicon-jira-plain colored" },
+    { name: "Docker", icon: "devicon-docker-plain colored" },
+    { name: "Putty", icon: "devicon-putty-plain colored" },
+    { name: "AWS", icon: "devicon-amazonwebservices-plain colored" },
+    { name: "MySQL", icon: "devicon-mysql-plain colored" },
+    { name: "MongoDB", icon: "devicon-mongodb-plain colored" },
+    {name: "FireBase", icon: "devicon-firebase-plain colored"},
+    { name: "Agile", icon: "Recycle" },
+    { name: "Scrum", icon: "Users" },
 ];
 
 // ======================= COMPOSANT PRINCIPAL APP =======================
@@ -603,7 +678,7 @@ const App = () => {
             case 'coverLetter':
     return <CoverLetterPage setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} />;
 
-            case 'home': default: return <HomePage accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef} formationRef={formationRef} aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage} projectsData={projectsData} technologies={technologies} theme={theme} />;
+            case 'home': default: return <HomePage accueilRef={accueilRef} projetsRef={projetsRef} experienceRef={experienceRef} formationRef={formationRef} aproposRef={aproposRef} contactRef={contactRef} setCurrentPage={setCurrentPage} projectsData={projectsData} technologies={technologies} toolsAndMethods={toolsAndMethods} theme={theme} />;
         }
     };
 
