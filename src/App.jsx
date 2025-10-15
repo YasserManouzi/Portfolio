@@ -503,13 +503,15 @@ const App = () => {
     const scrollToSection = (e, id) => {
         e.preventDefault();
 
+        // On met à jour manuellement la section active pour une meilleure réactivité de l'interface
         setActiveSection(id);
-        
         isScrollingProgrammatically.current = true;
+
         const performScroll = () => {
             const element = sections[id]?.current;
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Après un délai, on réactive la détection par l'observateur
                 setTimeout(() => { isScrollingProgrammatically.current = false; }, 1000);
             } else {
                 isScrollingProgrammatically.current = false;
@@ -518,6 +520,7 @@ const App = () => {
 
         if (currentPage !== 'home') {
             setCurrentPage('home');
+            // On attend que la page d'accueil se rende avant de faire défiler
             setTimeout(performScroll, 50);
         } else {
             performScroll();
@@ -530,32 +533,50 @@ const App = () => {
         localStorage.setItem('theme', theme);
     }, [theme]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollY = window.scrollY;
-            setIsScrolled(scrollY > 50);
-            if (isScrollingProgrammatically.current || currentPage !== 'home') return;
-            
-            let currentSectionId = sectionOrder[0];
-            for (const sectionId of sectionOrder) {
-                const section = sections[sectionId].current;
-               if (section && section.offsetTop <= scrollY + window.innerHeight / 2) {
-                    currentSectionId = sectionId;
-                }
-            }
-            if (activeSection !== currentSectionId) {
-                setActiveSection(currentSectionId);
-            }
+     useEffect(() => {
+        if (currentPage !== 'home') return; // Observateur actif uniquement sur la page d'accueil
 
-            const currentIndex = sectionOrder.indexOf(currentSectionId);
-            setPreviousSectionId(currentIndex > 0 ? sectionOrder[currentIndex - 1] : null);
-            setNextSectionId(currentIndex + 1 < sectionOrder.length ? sectionOrder[currentIndex + 1] : null);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                // Si un défilement programmé est en cours, on ignore les mises à jour de l'observateur
+                if (isScrollingProgrammatically.current) return;
+                
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id);
+                    }
+                });
+            },
+            { 
+                rootMargin: '-50% 0px -50% 0px' // Déclenche lorsque la section croise le centre vertical de l'écran
+            }
+        );
+
+        const currentSections = sectionOrder.map(id => sections[id]?.current).filter(Boolean);
+        currentSections.forEach(section => observer.observe(section));
+
+        return () => {
+            currentSections.forEach(section => observer.unobserve(section));
+        };
+    }, [currentPage, sections, sectionOrder]);
+
+   useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [currentPage, sections, sectionOrder, activeSection]);
+    }, []);
 
-   useEffect(() => {
+    // Met à jour les sections précédente/suivante pour les boutons de navigation rapide
+    useEffect(() => {
+        const currentIndex = sectionOrder.indexOf(activeSection);
+        setPreviousSectionId(currentIndex > 0 ? sectionOrder[currentIndex - 1] : null);
+        setNextSectionId(currentIndex + 1 < sectionOrder.length ? sectionOrder[currentIndex + 1] : null);
+    }, [activeSection, sectionOrder]);
+
+    // Remonte en haut de la page lors d'un changement de vue
+    useEffect(() => {
         if (currentPage !== 'home') {
             window.scrollTo(0, 0);
         }
