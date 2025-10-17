@@ -1,14 +1,15 @@
-// src/components/CustomScrollbar.jsx
-
+/**
+ * @file CustomScrollbar.jsx
+ * @description Affiche une barre de progression de défilement en haut de la page.
+ * La couleur de la barre s'adapte au thème (clair/sombre) pour une meilleure visibilité.
+ */
 import React from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * Affiche une barre de progression de défilement en haut de la page.
  * @param {object} props - Les propriétés du composant.
- * @param {object} props.scrollYProgress - La progression du défilement (de 0 à 1) fournie par useScroll de Framer Motion.
+ * @param {import('framer-motion').MotionValue<number>} props.scrollYProgress - La progression du défilement (de 0 à 1).
  * @param {string} props.theme - Le thème actuel ('light' ou 'dark').
-
  */
 const CustomScrollbar = ({ scrollYProgress, theme }) => {
     

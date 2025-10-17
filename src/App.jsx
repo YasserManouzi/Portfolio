@@ -1,3 +1,8 @@
+/**
+ * @file App.jsx
+ * @description Composant racine de l'application. Gère l'état global (thème, page active),
+ * la navigation entre les sections et les pages, et orchestre l'affichage des composants.
+ */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +47,10 @@ const App = () => {
         accueil: accueilRef, projets: projetsRef, experience: experienceRef,
         formation: formationRef, apropos: aproposRef, contact: contactRef
     }), []);
+        // Mémorise l'ordre des sections pour la navigation
     const sectionOrder = useMemo(() => ['accueil', 'projets', 'experience', 'formation', 'apropos', 'contact'], []);
+
+        // Réf pour éviter que l'IntersectionObserver ne se déclenche pendant un scroll programmé
     const isScrollingProgrammatically = useRef(false);
 
     // --- GESTION DES DONNÉES DE PROJETS (MULTILINGUE) ---
@@ -98,6 +106,11 @@ const App = () => {
 
     // --- FONCTIONS DE NAVIGATION ---
 
+     /**
+     * Fait défiler la vue vers une section spécifique.
+     * @param {Event} e - L'événement du clic.
+     * @param {string} id - L'ID de la section cible.
+     */
     const scrollToSection = (e, id) => {
         e.preventDefault();
         setActiveSection(id);
@@ -115,12 +128,13 @@ const App = () => {
 
         if (currentPage !== 'home') {
             setCurrentPage('home');
-            setTimeout(performScroll, 50); // Laisse le temps au DOM de se mettre à jour
+            setTimeout(performScroll, 50);
         } else {
             performScroll();
         }
     };
 
+    // Calcule les sections précédente et suivante pour les boutons de navigation rapide
     const currentIndex = sectionOrder.indexOf(activeSection);
     const previousSectionId = currentIndex > 0 ? sectionOrder[currentIndex - 1] : null;
     const nextSectionId = currentIndex < sectionOrder.length - 1 ? sectionOrder[currentIndex + 1] : null;
@@ -138,6 +152,10 @@ const App = () => {
     };
     
     // --- ROUTAGE ET AFFICHAGE CONDITIONNEL ---
+    /**
+     * Détermine quel composant de page afficher en fonction de `currentPage`.
+     * @returns {JSX.Element} Le composant de la page active.
+     */
     const renderContent = () => {
     const project = projectsData.find(p => p.id === currentPage);
     if (project) {
@@ -163,9 +181,10 @@ const App = () => {
     const { scrollYProgress } = useScroll();
     const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
+        // --- RENDU DU COMPOSANT APP ---
     return (
         <>
-            <CustomScrollbar scrollYProgress={scaleY} />
+            <CustomScrollbar scrollYProgress={scaleY} theme={theme} />
             <div className="transition-colors duration-300 bg-white dark:bg-gray-900">
                 <Navbar isScrolled={isScrolled} currentPage={currentPage} setCurrentPage={setCurrentPage} scrollToSection={scrollToSection} activeSection={activeSection} theme={theme} setTheme={setTheme} />
                 

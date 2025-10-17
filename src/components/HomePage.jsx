@@ -1,3 +1,8 @@
+/**
+ * @file HomePage.jsx
+ * @description Composant qui affiche le contenu principal de la page d'accueil, 
+ * incluant toutes les sections (Accueil, Projets, Expérience, etc.).
+ */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -7,10 +12,20 @@ import FadeInSection from './FadeInSection';
 import { technologies } from '../data/technologies';
 import { toolsAndMethods } from '../data/toolsAndMethods';
 
+/**
+ * @param {object} props - Propriétés du composant.
+ * @param {object} props.refs - Références vers les différentes sections de la page.
+ * @param {function} props.setCurrentPage - Fonction pour naviguer vers une autre page (ex: un projet).
+ * @param {Array<object>} props.projectsData - Données des projets.
+ * @param {string} props.theme - Thème actuel.
+ * @param {string} props.CV_FR - URL du CV français.
+ * @param {string} props.CV_EN - URL du CV anglais.
+ */
 const HomePage = ({ refs, setCurrentPage, projectsData, theme, toolsAndMethods, CV_FR, CV_EN }) => {
     const { t, i18n } = useTranslation();
     const { accueilRef, projetsRef, experienceRef, formationRef, aproposRef, contactRef } = refs;
 
+    // --- LOGIQUE POUR L'EFFET "MACHINE À ÉCRIRE" (TYPING) ---
     const phrases = useMemo(() => [t('hero_phrases.1'), t('hero_phrases.2'), t('hero_phrases.3')], [t]);
     const [currentText, setCurrentText] = useState('');
     const [phraseIndex, setPhraseIndex] = useState(0);
@@ -38,6 +53,7 @@ const HomePage = ({ refs, setCurrentPage, projectsData, theme, toolsAndMethods, 
         return () => clearTimeout(timeoutId);
     }, [currentText, isDeleting, typingSpeed, phraseIndex, phrases]);
 
+    // --- LOGIQUE POUR L'ANIMATION DE PARTICULES EN ARRIÈRE-PLAN ---
     const { ref: inViewRef, inView } = useInView({ threshold: 0 });
     const canvasRef = useRef(null);
     useEffect(() => {
@@ -81,9 +97,12 @@ const HomePage = ({ refs, setCurrentPage, projectsData, theme, toolsAndMethods, 
         };
     }, [inView, theme]);
 
+
+        // Sélectionne le bon CV en fonction de la langue active
     const cvPath = i18n.language.startsWith('fr') ? CV_FR : CV_EN;
     const downloadFilename = i18n.language.startsWith('fr') ? 'CV_Yasser_Manouzi_FR.pdf' : 'CV_Yasser_Manouzi_EN.pdf';
 
+        // --- VARIANTES D'ANIMATION (FRAMER MOTION) ---
     const { ref: technologiesRef, inView: technologiesInView } = useInView({ triggerOnce: true, threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
     const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };

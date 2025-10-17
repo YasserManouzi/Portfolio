@@ -1,3 +1,8 @@
+/**
+ * @file Navbar.jsx
+ * @description Affiche la barre de navigation principale du site.
+ * Gère le style en fonction du défilement, le focus sur le lien actif, et le menu mobile.
+ */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +42,11 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
         setIsMenuOpen(false);
     };
 
+      /**
+     * Génère les classes CSS pour les liens de section, en gérant l'état actif/inactif.
+     * @param {string} sectionId - L'ID de la section pour ce lien.
+     * @returns {string} Les classes CSS Tailwind.
+     */
     const getLinkClassName = (sectionId) => {
         const isActive = (currentPage === 'home' && activeSection === sectionId);
         return `transition-colors duration-300 dark:text-gray-300 ${
@@ -46,6 +56,10 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
         }`;
     };
 
+    /**
+     * Génère les classes CSS pour le lien "Lettre de présentation".
+     * @returns {string} Les classes CSS Tailwind.
+     */
     const getCoverLetterClassName = () => {
         const isActive = currentPage === 'coverLetter';
         return `transition-colors duration-300 dark:text-gray-300 ${
@@ -55,6 +69,7 @@ const Navbar = ({ isScrolled, currentPage, setCurrentPage, scrollToSection, acti
         }`;
     }
     return (
+                // L'en-tête devient semi-opaque et flouté au défilement
         <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/80 shadow-lg backdrop-blur-sm' : 'bg-transparent'}`}>
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo cliquable pour revenir à l'accueil */}
